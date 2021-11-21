@@ -1,11 +1,11 @@
 {
-  "name": "electron-updater-example",
-  "version": "0.8.1",
+  "name": "nuxo_front",
+  "version": "0.8.4",
   "main": "main.js",
-  "description": "electron-updater example project",
-  "author": "Matt Haggard",
+  "description": "nuxo_front_update project",
+  "author": "Cesar Casadiego",
   "scripts": {
-    "publish": "electron-builder -p always"
+    "publish": "yarn electron-builder --win -p always"
   },
   "devDependencies": {
     "electron": "^14.0.1",
@@ -16,8 +16,16 @@
     "electron-log": "^4.4.1",
     "electron-updater": "^4.3.9"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CC25MC/nuxo_front_update"
+  },
+  "bugs": {
+    "url": "https://github.com/CC25MC/nuxo_front_update/issues"
+  },
+  "homepage": "git+https://github.com/CC25MC/nuxo_front_update#readme",
   "build": {
-    "appId": "com.github.iffy.electronupdaterexample",
+    "appId": "com.github.CC25MC.nuxofrontupdate",
     "afterSign": "./build/notarize.js",
     "mac": {
       "category": "your.app.category.type"
@@ -28,6 +36,13 @@
     "nsis": {
       "oneClick": false
     },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "CC25MC",
+        "repo": "nuxo_front_update"
+      }
+    ],
     "linux": {
       "category": "your.app.category.type",
       "target": "AppImage"
