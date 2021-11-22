@@ -23,6 +23,7 @@ log.info('App starting...');
 // THIS SECTION IS NOT REQUIRED
 //-------------------------------------------------------------------
 let template = []
+const isDev = process.env.NODE_ENV === "development";
 if (process.platform === 'darwin') {
   // OS X
   const name = app.getName();
@@ -61,11 +62,11 @@ function sendStatusToWindow(text) {
 function createDefaultWindow() {
   win = new BrowserWindow({
     webPreferences: {
+      devTools: isDev,
       nodeIntegration: true,
       contextIsolation: false
     }
   });
-  win.webContents.openDevTools();
   win.on('closed', () => {
     win = null;
   });
