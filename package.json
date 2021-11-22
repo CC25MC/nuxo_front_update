@@ -1,10 +1,11 @@
 {
   "name": "nuxo_front",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "main": "main.js",
   "description": "nuxo_front_update project",
   "author": "Cesar Casadiego",
   "scripts": {
+    "dev": "yarn electron .",
     "publish": "yarn electron-builder --win -p always"
   },
   "devDependencies": {
