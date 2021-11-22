@@ -1,9 +1,9 @@
 // This is free and unencumbered software released into the public domain.
 // See LICENSE for details
 
-const {app, BrowserWindow, Menu} = require('electron');
+const { app, BrowserWindow, Menu } = require('electron');
 const log = require('electron-log');
-const {autoUpdater} = require("electron-updater");
+const { autoUpdater } = require("electron-updater");
 
 //-------------------------------------------------------------------
 // Logging
@@ -23,7 +23,6 @@ log.info('App starting...');
 // THIS SECTION IS NOT REQUIRED
 //-------------------------------------------------------------------
 let template = []
-const isDev = process.env.NODE_ENV === "development";
 if (process.platform === 'darwin') {
   // OS X
   const name = app.getName();
@@ -55,18 +54,23 @@ if (process.platform === 'darwin') {
 //-------------------------------------------------------------------
 let win;
 
-function sendStatusToWindow(text) {
-  log.info(text);
-  win.webContents.send('message', text);
+function sendStatusToWindow(option, text) {
+  if (option === "message") {
+    log.info(text);
+    win.webContents.send('message', text);
+  } {
+    log.info(text);
+    win.webContents.send('progressbar', text);
+  }
 }
 function createDefaultWindow() {
   win = new BrowserWindow({
     webPreferences: {
-      devTools: isDev,
       nodeIntegration: true,
       contextIsolation: false
     }
   });
+  // win.webContents.openDevTools();
   win.on('closed', () => {
     win = null;
   });
@@ -74,27 +78,28 @@ function createDefaultWindow() {
   return win;
 }
 autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...');
+  sendStatusToWindow("message",'Verificando Actualización...');
 })
 autoUpdater.on('update-available', (info) => {
-  sendStatusToWindow('Update available.');
+  sendStatusToWindow("message",'Actualización Disponible.');
 })
 autoUpdater.on('update-not-available', (info) => {
-  sendStatusToWindow('Update not available.');
+  sendStatusToWindow("message",'Actualización no Disponible.');
 })
 autoUpdater.on('error', (err) => {
-  sendStatusToWindow('Error in auto-updater. ' + err);
+  sendStatusToWindow("message",'Ah Ocurrido un error al descargar la actualización' + err);
 })
 autoUpdater.on('download-progress', (progressObj) => {
-  let log_message = "Download speed: " + progressObj.bytesPerSecond;
-  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-  sendStatusToWindow(log_message);
+  let log_message = progressObj.percent
+  //  Download speed: + progressObj.bytesPerSecond;
+  // log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  // log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  sendStatusToWindow("progressbar", log_message);
 })
 autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('Update downloaded');
+  sendStatusToWindow("message",'Actualización Descargada');
 });
-app.on('ready', function() {
+app.on('ready', function () {
   // Create the Menu
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
@@ -115,7 +120,7 @@ app.on('window-all-closed', () => {
 // This will immediately download an update, then install when the
 // app quits.
 //-------------------------------------------------------------------
-app.on('ready', function()  {
+app.on('ready', function () {
   autoUpdater.checkForUpdatesAndNotify();
 });
 
