@@ -4,7 +4,6 @@
 const { app, BrowserWindow, Menu } = require('electron');
 const log = require('electron-log');
 const { autoUpdater } = require("electron-updater");
-
 //-------------------------------------------------------------------
 // Logging
 //
@@ -52,59 +51,68 @@ if (process.platform === 'darwin') {
 // for the app to show a window than to have to click "About" to see
 // that updates are working.
 //-------------------------------------------------------------------
+let update;
 let win;
 
 function sendStatusToWindow(option, text) {
   if (option === "message") {
     log.info(text);
-    win.webContents.send('message', text);
-  } {
+    update.webContents.send('message', text);
+    if (text === "No hay Actualizaciones") {
+      update.close();
+    } else if (text === "Actualización Disponible.") {
+      update.show();
+    }
+  } else {
     log.info(text);
-    win.webContents.send('progressbar', text);
+    update.webContents.send('progressbar', text);
   }
 }
-function createDefaultWindow() {
-  win = new BrowserWindow({
+function createUpdateWindow() {
+  update = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
     }
   });
   // win.webContents.openDevTools();
-  win.on('closed', () => {
-    win = null;
+  update.on('closed', () => {
+    update = null;
   });
-  win.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
-  return win;
+  update.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
+
 }
+
+setInterval(() => {
+  autoUpdater.checkForUpdates();
+}, 60000)
+
 autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow("message",'Verificando Actualización...');
+  sendStatusToWindow("message", 'Verificando Actualización...');
 })
 autoUpdater.on('update-available', (info) => {
-  sendStatusToWindow("message",'Actualización Disponible.');
+  sendStatusToWindow("message", 'Actualización Disponible.');
 })
 autoUpdater.on('update-not-available', (info) => {
-  sendStatusToWindow("message",'Actualización no Disponible.');
+  sendStatusToWindow("message", 'No hay Actualizaciones');
 })
 autoUpdater.on('error', (err) => {
-  sendStatusToWindow("message",'Ah Ocurrido un error al descargar la actualización' + err);
+  sendStatusToWindow("message", 'Ah Ocurrido un error al descargar la actualización' + err);
 })
 autoUpdater.on('download-progress', (progressObj) => {
   let log_message = progressObj.percent
-  //  Download speed: + progressObj.bytesPerSecond;
-  // log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-  // log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
   sendStatusToWindow("progressbar", log_message);
 })
 autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow("message",'Actualización Descargada');
+  sendStatusToWindow("message", 'Actualización Descargada');
+  autoUpdater.quitAndInstall();
 });
 app.on('ready', function () {
   // Create the Menu
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
-  createDefaultWindow();
+  createUpdateWindow();
 });
 app.on('window-all-closed', () => {
   app.quit();

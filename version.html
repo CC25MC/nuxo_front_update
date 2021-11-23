@@ -28,6 +28,7 @@
        var container = document.getElementById('messages');
        var message = document.createElement('div');
        message.innerHTML = text;
+       container.appendChild(message);
      })
      ipcRenderer.on('progressbar', function (event, text) {
       var bars = document.getElementById('bar');
