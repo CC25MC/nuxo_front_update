@@ -1,6 +1,6 @@
 {
   "name": "nuxo_front_update",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "public/main.js",
   "description": "nuxo_front_update project",
   "author": "Cesar Casadiego",
@@ -12,7 +12,7 @@
     "electron:serve": "concurrently -k \"cross-env BROWSER=none yarn start\" \"yarn electron:start\"",
     "electron:build": "yarn build && electron-builder -p always -c.extraMetadata.main=build/main.js",
     "electron:start": "wait-on tcp:3000 && electron .",
-    "publish": "yarn electron-builder -c.extraMetadata.main=build/main.js -p always"
+    "publish": "yarn build && electron-builder -c.extraMetadata.main=build/main.js -p always"
   },
   "devDependencies": {
     "concurrently": "^5.3.0",
