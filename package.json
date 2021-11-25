@@ -1,6 +1,6 @@
 {
   "name": "nuxo_front_update",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "public/main.js",
   "description": "nuxo_front_update project",
   "author": "Cesar Casadiego",
@@ -29,7 +29,7 @@
     "@testing-library/user-event": "^12.1.10",
     "bootstrap": "^5.0.0-beta1",
     "electron-is-dev": "^1.2.0",
-    "electron-updater": "^4.6.1",
+    "electron-updater": "^4.3.9",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
