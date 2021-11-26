@@ -61,7 +61,7 @@ function createWindow() {
   )
 
   update = new BrowserWindow({
-    width: 500,
+    width: 350,
     height: 200,
     webPreferences: {
       nodeIntegration: true,
@@ -75,9 +75,8 @@ function createWindow() {
   update.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
 }
 
-app.on('ready', createWindow)
-
-win.once('ready-to-show', () => {
+app.on('ready',()=>{
+  createWindow();
   autoUpdater.checkForUpdatesAndNotify();
 });
 
@@ -104,6 +103,9 @@ autoUpdater.on('update-available', (info) => {
 })
 autoUpdater.on('update-not-available', (info) => {
   sendStatusToWindow("message", 'No hay Actualizaciones');
+  setInterval(() => {
+    autoUpdater.checkForUpdates()
+  }, 60000)
 })
 autoUpdater.on('error', (err) => {
   sendStatusToWindow("message", 'Ah Ocurrido un error al descargar la actualización' + err);
@@ -116,7 +118,3 @@ autoUpdater.on('update-downloaded', (info) => {
   sendStatusToWindow("message", 'Actualización Descargada');
   autoUpdater.quitAndInstall();
 });
-
-// app.on('ready', function () {
-//   autoUpdater.checkForUpdatesAndNotify();
-// });
