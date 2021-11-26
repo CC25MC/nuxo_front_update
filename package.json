@@ -1,6 +1,6 @@
 {
   "name": "nuxo_front_update",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "main": "public/main.js",
   "description": "nuxo_front_update project",
   "author": "Cesar Casadiego",
