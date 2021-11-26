@@ -105,7 +105,7 @@ autoUpdater.on('update-not-available', (info) => {
   sendStatusToWindow("message", 'No hay Actualizaciones');
   setInterval(() => {
     autoUpdater.checkForUpdates()
-  }, 60000)
+  }, 30000)
 })
 autoUpdater.on('error', (err) => {
   sendStatusToWindow("message", 'Ah Ocurrido un error al descargar la actualización' + err);
