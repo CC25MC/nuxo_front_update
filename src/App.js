@@ -1,10 +1,72 @@
-import React from 'react'
+import React, { useState } from 'react'
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Button from '@material-ui/core/Button';
+const electron = window.require('electron');
+const ipcRenderer = electron.ipcRenderer;
 
 const App = () => {
+  const [notification, setNotification] = useState(false);
+  const [message, setMessage] = useState("");
+  const [progress, setProgress] = useState(0);
+
+  ipcRenderer.on('message', function (event, text) {
+    if (text === "Actualización Disponible.") {
+      setNotification(true);
+      setMessage(text);
+    } else if (text === "Actualización Descargada") {
+      setMessage(text);
+    }
+  });
+
+  ipcRenderer.on('progressbar', function (event, text) {
+    setMessage("Descargando");
+    setProgress(text);
+  });
+
+  const restartApp = () => {
+    ipcRenderer.send('restart_app');
+  }
+
+  setInterval(() => {
+    ipcRenderer.send('update_app');
+  }, 300000)
+
   return (
-    <h1>
-      Nuxo App Espero ahora si que si, dame una probabilidad por dios
-    </h1>
+    <div>
+      <h1>
+        Nuxo App Espero ahora si que si, Prueba de fuego numero 1
+      </h1>
+      {notification &&
+        <div style={{
+          position: "fixed",
+          bottom: "20px",
+          left: "20px",
+          width: "300px",
+          padding: "20px",
+          borderRadius: "5px",
+          backgroundColor: "white",
+          boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)"
+        }}>
+          {message}
+          <div style={{ marginTop: "10px" }} />
+          <LinearProgress variant="determinate" value={progress} />
+          <div style={{
+            display: "flex",
+            marginTop: 10,
+            flexDirection: "row",
+          }}>
+            {message === "Descargando" || message === "Actualización Disponible." ?
+              null
+              :
+              <>
+                <Button variant="contained" onClick={() => { setNotification(false) }}>Cerrar </Button>
+                <Button style={{ marginLeft: "auto" }} variant="contained" color="primary" onClick={restartApp}>Reiniciar App</Button>
+              </>
+            }
+          </div>
+
+        </div>}
+    </div>
   )
 }
 

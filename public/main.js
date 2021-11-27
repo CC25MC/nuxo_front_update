@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu  } = require('electron')
+const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 const { autoUpdater } = require("electron-updater");
 const path = require('path')
 const isDev = require('electron-is-dev')
@@ -25,31 +25,24 @@ if (process.platform === 'darwin') {
   })
 }
 
-let update;
+// let update;
+let win;
 
 function sendStatusToWindow(option, text) {
-  if (option === "message") {
-    update.webContents.send('message', text);
-    if (text === "No hay Actualizaciones") {
-      update.close();
-    } else if (text === "Actualización Disponible.") {
-      update.show();
-    }
-  } else {
-    update.webContents.send('progressbar', text);
-  }
+  if (option === "message")
+    win.webContents.send('message', text);
 }
 
 function createWindow() {
   // Create the browser window.
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
-  const win = new BrowserWindow({
+  // const menu = Menu.buildFromTemplate(template);
+  // Menu.setApplicationMenu(menu);
+  win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true,
+      enableRemoteModule: false,
       contextIsolation: false
     }
   })
@@ -59,23 +52,25 @@ function createWindow() {
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`
   )
+  // if (!isDev) {
+  //   update = new BrowserWindow({
+  //     width: 350,
+  //     height: 200,
+  //     webPreferences: {
+  //       nodeIntegration: true,
+  //       contextIsolation: false
+  //     }
+  //   });
+  //   // win.webContents.openDevTools();
+  //   update.on('closed', () => {
+  //     update = null;
+  //   });
+  //   update.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
+  // }
 
-  update = new BrowserWindow({
-    width: 350,
-    height: 200,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    }
-  });
-  // win.webContents.openDevTools();
-  update.on('closed', () => {
-    update = null;
-  });
-  update.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
 }
 
-app.on('ready',()=>{
+app.on('ready', () => {
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
 });
@@ -103,18 +98,21 @@ autoUpdater.on('update-available', (info) => {
 })
 autoUpdater.on('update-not-available', (info) => {
   sendStatusToWindow("message", 'No hay Actualizaciones');
-  setInterval(() => {
-    autoUpdater.checkForUpdates()
-  }, 30000)
 })
 autoUpdater.on('error', (err) => {
   sendStatusToWindow("message", 'Ah Ocurrido un error al descargar la actualización' + err);
 })
 autoUpdater.on('download-progress', (progressObj) => {
-  let log_message = progressObj.percent
-  sendStatusToWindow("progressbar", log_message);
+  win.webContents.send('progressbar', progressObj.percent);
 })
 autoUpdater.on('update-downloaded', (info) => {
   sendStatusToWindow("message", 'Actualización Descargada');
+});
+
+ipcMain.on('restart_app', (event, arg) => {
   autoUpdater.quitAndInstall();
+});
+
+ipcMain.on('update_app', (event, arg) => {
+  autoUpdater.checkForUpdates()
 });
