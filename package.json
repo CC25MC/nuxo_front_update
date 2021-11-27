@@ -1,6 +1,6 @@
 {
   "name": "nuxo_front_update",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "main": "public/main.js",
   "description": "nuxo_front_update project",
   "author": "Cesar Casadiego",
@@ -18,7 +18,7 @@
     "concurrently": "^5.3.0",
     "cross-env": "^7.0.3",
     "electron": "^11.2.1",
-    "electron-builder": "^22.9.1",
+    "electron-builder": "^22.11.7",
     "prettier": "^2.2.1",
     "wait-on": "^5.2.1"
   },
