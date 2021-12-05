@@ -2,7 +2,12 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 const { autoUpdater } = require("electron-updater");
 const path = require('path')
 const isDev = require('electron-is-dev')
-
+var child = require('child_process').execFile;
+const pluginPath = path.join(
+  __dirname,
+  '../static/scraping-eboleta'
+);
+var parameters = ["--incognito", "--shell"];
 require('@electron/remote/main').initialize()
 
 let template = []
@@ -72,6 +77,18 @@ function createWindow() {
 
 app.on('ready', () => {
   createWindow();
+  child(pluginPath, {
+    cwd: path.join(
+       __dirname,
+       '../statico'),
+    windowsHide: true,
+  }, (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(data.toString());
+  });
   autoUpdater.checkForUpdatesAndNotify();
 });
 
