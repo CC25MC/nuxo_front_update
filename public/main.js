@@ -5,7 +5,7 @@ const isDev = require('electron-is-dev')
 var child = require('child_process').execFile;
 const pluginPath = path.join(
   __dirname,
-  '../static/scraping-eboleta'
+  '../statico/scraping-eboleta'
 );
 var parameters = ["--incognito", "--shell"];
 require('@electron/remote/main').initialize()
