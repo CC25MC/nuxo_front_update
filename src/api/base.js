@@ -4,7 +4,7 @@ import { PERSISTOR_KEYS } from "../variables";
 
 const token = getPersistedState(PERSISTOR_KEYS.auth)?.token
 export const request = create({
-	baseURL: process.env.REACT_APP_BASE_URL,
+	baseURL: "http://localhost:5000",
 	headers: { 'x-token': token }
 });
 

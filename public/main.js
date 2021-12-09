@@ -5,7 +5,7 @@ const isDev = require('electron-is-dev')
 var child = require('child_process').execFile;
 const pluginPath = path.join(
   __dirname,
-  '../statico/scraping-eboleta'
+  '../src/statico/scraping-eboleta'
 );
 var parameters = ["--incognito", "--shell"];
 require('@electron/remote/main').initialize()
@@ -78,9 +78,13 @@ function createWindow() {
 app.on('ready', () => {
   createWindow();
   child(pluginPath, {
+    env: {
+      PORT:5000,
+      PRIVATEKEY:"scr3t3k3yb0l3t4scr4p1ng"
+    },
     cwd: path.join(
        __dirname,
-       '../statico'),
+       '../src/statico'),
     windowsHide: true,
   }, (err, data) => {
     if (err) {

@@ -1,6 +1,6 @@
 {
   "name": "nuxo_front_update",
-  "version": "0.0.43",
+  "version": "0.0.41",
   "main": "public/main.js",
   "description": "nuxo_front_update project",
   "author": "Cesar Casadiego",
@@ -10,7 +10,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron:serve": "concurrently -k \"cross-env BROWSER=none yarn start\" \"yarn electron:start\"",
-    "electron:build": "yarn build && electron-builder -p always -c.extraMetadata.main=build/main.js",
+    "electron:build": "yarn build && electron-builder -c.extraMetadata.main=build/main.js",
     "electron:start": "wait-on tcp:3000 && electron .",
     "publish": "yarn build && electron-builder -c.extraMetadata.main=build/main.js -p always"
   },
