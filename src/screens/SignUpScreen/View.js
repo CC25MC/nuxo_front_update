@@ -14,8 +14,10 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import { validate } from 'rut.js'
+import { useLocation } from '../../hooks';
 
 const SignUpView = ({ handleChange, handleSubmit, rut, password, repeatPassword, loading = false }) => {
+    const { setPath } = useLocation();
     return (
         <Container component="main" maxWidth="sm">
             <CssBaseline />
@@ -95,18 +97,18 @@ const SignUpView = ({ handleChange, handleSubmit, rut, password, repeatPassword,
                     >
                         {loading ? <CircularProgress color="secondary" /> : "Registrate"}
                     </Button>
-                    <Grid container>
+                    {/* <Grid container>
                         <Grid item xs>
-                            <Link href="/" variant="body2">
+                            <Link href="#" onClick={() => setPath("/")} variant="body2">
                                 Volver
                             </Link>
                         </Grid>
-                        {/* <Grid item style={{ marginLeft: "auto" }}>
+                         <Grid item style={{ marginLeft: "auto" }}>
                             <Link href="#" variant="body2">
                                 {"Aún no tienes una cuenta? Registrate"}
                             </Link>
-                        </Grid> */}
-                    </Grid>
+                        </Grid> 
+                    </Grid> */}
                 </Box>
             </Box>
         </Container>

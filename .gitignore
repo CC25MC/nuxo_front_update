@@ -12,7 +12,7 @@
 # production
 /build
 /dist
-/src/statico
+/statico
 
 # misc
 .DS_Store

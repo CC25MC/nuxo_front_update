@@ -1,0 +1,338 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Estos los endpoints seguros de nuxo",
+    "version": "0.0.1",
+    "title": "Nuxo",
+    "termsOfService": "http://nuxo.com/terms/",
+    "contact": {
+      "email": "darwinrc92@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "localhost:5000",
+  "tags": [
+    {
+      "name": "Ticket",
+      "description": "Crea todas las boletas mediante el servicio Eboleta",
+      "externalDocs": {
+        "description": "Más informacion en",
+        "url": "https://nuxo.cl/"
+      }
+    },
+    {
+      "name": "Documentos",
+      "description": "Descarga todos los documentos emitidos y recibidos",
+      "externalDocs": {
+        "description": "Más informacion en",
+        "url": "https://nuxo.cl/"
+      }
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/tickets": {
+      "post": {
+        "tags": [
+          "Ticket"
+        ],
+        "summary": "Crear Ticket",
+        "description": "Emite una Boleta a traves del servicio eboleta.cl",
+        "operationId": "emitTicket",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Objeto que debe enviarse para emitir una boleta",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Ticket"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Ticket"
+        ],
+        "summary": "Obtener Tickets",
+        "description": "Obtiene todos los tickets generados por el sistema",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "error al obtener todos los tickets"
+          }
+        }
+      }
+    },
+    "/api/tickets/view/{id}": {
+      "get": {
+        "tags": [
+          "Ticket"
+        ],
+        "summary": "Ver Ticket mediante ID",
+        "description": "Retorna el pdf de la boleta",
+        "operationId": "getTicketById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID del ticket a devolver",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "pdf no encontrado"
+          }
+        }
+      }
+    },
+    "/api/tickets/{id}": {
+      "put": {
+        "tags": [
+          "Ticket"
+        ],
+        "summary": "Actualizar ticket mediante ID",
+        "description": "Actualizar el ticket del sistema",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID del ticket a actualizar",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Objeto que debe enviarse para emitir una boleta",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Ticket"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "ticket no eliminado"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Ticket"
+        ],
+        "summary": "Eliminar ticket mediante ID",
+        "description": "Elimina el ticket del sistema",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID del ticket a eliminar",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "ticket no eliminado"
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": [
+          "Usuario"
+        ],
+        "summary": "retorna todos los usuarios",
+        "description": "Retorna todos los usuarios",
+        "operationId": "getusers",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Error al consultar usuarios"
+          }
+        }
+      }
+    },
+    "/api/documents/explore": {
+      "get": {
+        "tags": [
+          "Documentos"
+        ],
+        "summary": "Descargar documentos recibidos",
+        "description": "Descarga todos los documentos recibidos que esten en la cuenta",
+        "operationId": "getDocumentReceived",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Error al descargar documentos recibidos"
+          }
+        }
+      }
+    },
+    "/api/documents/explore/issued": {
+      "get": {
+        "tags": [
+          "Documentos"
+        ],
+        "summary": "Descargar documentos emitidos",
+        "description": "Descarga todos los documentos emitidos que esten en la cuenta",
+        "operationId": "getDocumentEmit",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Error al descargar documentos emitidos"
+          }
+        }
+      }
+    },
+    "/api/documents": {
+      "get": {
+        "tags": [
+          "Documentos"
+        ],
+        "summary": "Obtiene los documentos",
+        "description": "Obtiene todos los documentos que esten en la bd",
+        "operationId": "getDocument",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Error al obtener los documentos"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Usuario": {
+      "type": "object",
+      "required": [
+        "rut",
+        "password"
+      ],
+      "properties": {
+        "rut": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Ticket": {
+      "type": "object",
+      "required": [
+        "name",
+        "photoUrls"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "typeTicket": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "receiver": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "address": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "rut": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "xml": {
+        "name": "Ticket"
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

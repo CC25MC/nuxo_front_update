@@ -2,10 +2,10 @@ import request from "../../api";
 import { useMutation, useQuery } from 'react-query';
 import { atom, useAtom } from "jotai";
 import { useSnackbar } from 'notistack';
-import { useNavigate } from "react-router";
 import { useEffect } from "react";
 import { persistState, getPersistedState } from "../../utils";
 import { PERSISTOR_KEYS } from "../../variables";
+import { useLocation } from '../useLocation';
 
 const userAtom = atom(getPersistedState(PERSISTOR_KEYS.user) ?? {});
 const authAtom = atom(getPersistedState(PERSISTOR_KEYS.auth) ?? { isAuthenticated: false, token: "" });
@@ -13,7 +13,7 @@ const useAuth = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [user, setUser] = useAtom(userAtom);
     const [auth, setAuth] = useAtom(authAtom);
-
+    const { setPath } = useLocation();
     useEffect(() => persistState(PERSISTOR_KEYS.auth, auth), [auth]);
     useEffect(() => persistState(PERSISTOR_KEYS.user, user), [user]);
 
@@ -24,6 +24,7 @@ const useAuth = () => {
             setUser({});
             //eslint-disable-next-line
             setAuth({ isAuthenticated: false, token: null });
+            setPath("/");
             enqueueSnackbar('Cerraste Sesión ', { variant: 'success' });
         } catch (e) {
             enqueueSnackbar('Ucurrio un problema intentando cerrar sesión', { variant: 'error' });
@@ -37,19 +38,10 @@ const useAuth = () => {
     };
 };
 
-// const useUsers = () => {
-//     const bookshelf = window.bookshelf;
-//     return useQuery(
-//         "users",
-//         () => bookshelf.users.findMany(),
-//         { initialData: [] }
-//     );
-// };
-
 const login = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { setAuth, setUser } = useAuth();
-    const router = useNavigate();
+    const { setPath } = useLocation();
     const {
         mutate: signIn,
         isLoading: isSigningIn,
@@ -63,7 +55,7 @@ const login = () => {
                     setUser(data.user);
                     setAuth({ isAuthenticated: true, token: data.token });
                     enqueueSnackbar('Bienvenido', { variant: 'success' });
-                    router("/dashboard");
+                    setPath("/dashboard");
                 }
             }
         }
@@ -78,7 +70,8 @@ const login = () => {
 
 const register = () => {
     const { enqueueSnackbar } = useSnackbar();
-    const router = useNavigate();
+    const { setPath } = useLocation();
+    const { setUser } = useAuth();
     const {
         mutate: signUp,
         isLoading,
@@ -88,8 +81,9 @@ const register = () => {
         {
             onSuccess: data => {
                 if (data) {
+                    setUser(data);
                     enqueueSnackbar('Usuario Creado Satisfactoriamente', { variant: 'success' });
-                    router("/");
+                    setPath("/");
                 }
             },
         }
@@ -151,5 +145,5 @@ const getUsers = () => {
 
 export {
     // useUsers, useMutateUser, 
-    login, register, useAuth, userAtom, getUsers
+    login, register, useAuth, userAtom
 };

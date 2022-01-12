@@ -5,10 +5,10 @@ import {
 	Route,
 	Navigate
 } from "react-router-dom";
-import LoginScreen from "../screens/LoginScreen";
-import SignUpScreen from "../screens/SignUpScreen";
+// import LoginScreen from "../screens/LoginScreen";
+// import SignUpScreen from "../screens/SignUpScreen";
 import DashboardScreen from "../screens/DashboardScreen";
-import { useAuth } from '../hooks';
+import { useAuth, useLocation } from '../hooks';
 
 const ProtectedRoute = ({ children }) => {
 	const { auth } = useAuth();
@@ -19,16 +19,13 @@ const ProtectedRoute = ({ children }) => {
 	);
 };
 export const AppRouter = () => {
+	const { path } = useLocation();
 	return (
 		<Router>
-			<Routes>
-				<Route path="/" element={<LoginScreen />} />
-				<Route path="/signup" element={<SignUpScreen />} />
-				<Route path="/dashboard" element={
-					<ProtectedRoute>
-						<DashboardScreen />
-					</ProtectedRoute>
-				} />
+			<Routes location={path}>
+				{/* <Route path="/" element={<LoginScreen />} /> */}
+				{/* <Route path="/signup" element={<SignUpScreen />} /> */}
+				<Route path="/" element={<DashboardScreen />} />
 			</Routes>
 		</Router>
 	);

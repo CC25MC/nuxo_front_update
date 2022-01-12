@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
-import { emitTicket, getUsers } from '../../hooks';
+import { emitTicket } from '../../hooks';
 import { useSnackbar } from 'notistack';
 import { format, clean } from 'rut.js'
 
 export const Actions = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { emit, error, isLoading, data } = emitTicket();
-    const { error: errorUsers, isLoading: userLoading, data: Users } = getUsers();
-    console.log(Users, userLoading);
+    // const { error: errorUsers, isLoading: userLoading, data: Users } = getUsers();
+    // console.log(Users, userLoading);
     useEffect(() => {
         if (error) {
             enqueueSnackbar('Ah Ocurrido un error', { variant: 'error' });
         }
-        if (errorUsers) {
-            enqueueSnackbar('Ah Ocurrido un error cargando los usurarios', { variant: 'error' });
-        }
-    }, [error, errorUsers]);
+        // if (errorUsers) {
+        //     enqueueSnackbar('Ah Ocurrido un error cargando los usurarios', { variant: 'error' });
+        // }
+    }, [error]);
 
 
     const [values, setValues] = useState({

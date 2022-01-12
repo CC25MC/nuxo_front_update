@@ -1,11 +1,6 @@
 import request from "../../api";
-import { useMutation, useQuery } from 'react-query';
-import { atom, useAtom } from "jotai";
+import { useMutation } from 'react-query';
 import { useSnackbar } from 'notistack';
-import { useNavigate } from "react-router";
-import { useEffect } from "react";
-import { persistState, getPersistedState } from "../../utils";
-import { PERSISTOR_KEYS } from "../../variables";
 
 const emitTicket = () => {
     const { enqueueSnackbar } = useSnackbar();

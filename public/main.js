@@ -1,14 +1,15 @@
-const { app, BrowserWindow, Menu, ipcMain } = require('electron')
+const { app, BrowserWindow, Menu, ipcMain, ipcRenderer } = require('electron')
 const { autoUpdater } = require("electron-updater");
 const path = require('path')
 const isDev = require('electron-is-dev')
-var child = require('child_process').execFile;
-const pluginPath = path.join(
-  __dirname,
-  '../src/statico/scraping-eboleta'
-);
-var parameters = ["--incognito", "--shell"];
 require('@electron/remote/main').initialize()
+var child = require('child_process').execFile;
+
+const pluginPath = isDev ? path.join(
+  __dirname,
+  '../statico/scraping-eboleta'
+) : path.join(__dirname, '../../../statico/scraping-eboleta.exe');
+//  file://C:\Users\cesar\AppData\Local\Programs\Nuxo\resources\app.asar\build
 
 let template = []
 if (process.platform === 'darwin') {
@@ -30,12 +31,31 @@ if (process.platform === 'darwin') {
   })
 }
 
-// let update;
 let win;
 
 function sendStatusToWindow(option, text) {
   if (option === "message")
     win.webContents.send('message', text);
+}
+
+const server = () => {
+  child(pluginPath, {
+    env: {
+      PORT: 5000,
+      PRIVATEKEY: "scr3t3k3yb0l3t4scr4p1ng"
+    },
+    cwd: isDev ? path.join(
+      __dirname,
+      '../statico'
+    ) : path.join(__dirname, '../../../resources/statico'),
+    windowsHide: true,
+  }, (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(data.toString());
+  });
 }
 
 function createWindow() {
@@ -57,42 +77,12 @@ function createWindow() {
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`
   )
-  // if (!isDev) {
-  //   update = new BrowserWindow({
-  //     width: 350,
-  //     height: 200,
-  //     webPreferences: {
-  //       nodeIntegration: true,
-  //       contextIsolation: false
-  //     }
-  //   });
-  //   // win.webContents.openDevTools();
-  //   update.on('closed', () => {
-  //     update = null;
-  //   });
-  //   update.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
-  // }
 
 }
 
 app.on('ready', () => {
+  server();
   createWindow();
-  child(pluginPath, {
-    env: {
-      PORT:5000,
-      PRIVATEKEY:"scr3t3k3yb0l3t4scr4p1ng"
-    },
-    cwd: path.join(
-       __dirname,
-       '../src/statico'),
-    windowsHide: true,
-  }, (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log(data.toString());
-  });
   autoUpdater.checkForUpdatesAndNotify();
 });
 
