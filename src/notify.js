@@ -19,6 +19,7 @@ const Notify = () => {
     } else if (text === "Actualización Descargada") {
       setMessage(text);
     }
+    console.log(text);
   });
 
   ipcRenderer.on('progressbar', function (event, text) {

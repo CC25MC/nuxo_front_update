@@ -71,7 +71,8 @@
       "category": "your.app.category.type"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "public/images/android-chrome-512x512.png"
     },
     "nsis": {
       "oneClick": false

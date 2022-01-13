@@ -9,7 +9,7 @@ const iconPath = path.join(__dirname, "images/favicon-16x16.png");
 const pluginPath = isDev ? path.join(
   __dirname,
   '../statico/nuxo-win'
-) : path.join(__dirname, '../../../statico/nuxo-win.exe');
+) : path.join(__dirname, '../../statico/nuxo-win.exe');
 //  file://C:\Users\cesar\AppData\Local\Programs\Nuxo\resources\app.asar\build
 
 let template = []
@@ -42,10 +42,10 @@ function sendStatusToWindow(option, text) {
 
 const server = () => {
   child(pluginPath, {
-    env: {
-      PORT: 5000,
-      PRIVATEKEY: "scr3t3k3yb0l3t4scr4p1ng"
-    },
+    // env: {
+    //   PORT: 5000,
+    //   PRIVATEKEY: "scr3t3k3yb0l3t4scr4p1ng"
+    // },
     cwd: isDev ? path.join(
       __dirname,
       '../statico'
@@ -75,13 +75,19 @@ function createWindow() {
       contextIsolation: false
     }
   })
+  win.setMenu(null);
 
   win.loadURL(
     isDev
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`
   )
-
+  win.on('close', function () {
+    win = null;
+  });
+  // win.on('blur', function () {
+  //   win.hide();
+  // });
 }
 
 const tray = () => {
@@ -95,25 +101,11 @@ const tray = () => {
 app.on('ready', () => {
   server();
   createWindow();
-  autoUpdater.checkForUpdatesAndNotify();
-
-  win.on('close', function () {
-    win = null;
-  });
-  win.on('blur', function () {
-    win.hide();
-  });
   tray();
+  autoUpdater.checkForUpdatesAndNotify();
 });
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function () {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
 
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
