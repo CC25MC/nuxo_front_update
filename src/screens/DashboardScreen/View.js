@@ -10,7 +10,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import { validate } from 'rut.js';
@@ -46,8 +45,16 @@ const ViewRegister = (props) => {
     const {
         handleChange,
         handleSubmit,
-        rut,
-        password } = props;
+        loading,
+        nombre,
+        apellido,
+        correo,
+        telefono,
+        rutpersona,
+        clavesiipersona,
+        clavecertificado,
+        rutempresa,
+        clavesiiempresa } = props;
     return (
         <Box
             sx={{
@@ -56,7 +63,6 @@ const ViewRegister = (props) => {
                 alignItems: 'center',
             }}
         >
-            <CssBaseline />
             <Avatar src={logo} sx={{ p: 1, width: 100, height: 100 }} />
             <Typography component="h1" variant="h5">
                 Registrate
@@ -67,8 +73,8 @@ const ViewRegister = (props) => {
             <Box sx={{ mt: 1 }}>
                 <TextField
                     margin="normal"
-                    // onChange={handleChange("rut")}
-                    // value={rut}
+                    onChange={handleChange("nombre")}
+                    value={nombre}
                     required
                     fullWidth
                     id="name"
@@ -78,8 +84,8 @@ const ViewRegister = (props) => {
                 />
                 <TextField
                     margin="normal"
-                    // onChange={handleChange("rut")}
-                    // value={rut}
+                    onChange={handleChange("apellido")}
+                    value={apellido}
                     required
                     fullWidth
                     id="lastName"
@@ -88,8 +94,8 @@ const ViewRegister = (props) => {
                 />
                 <TextField
                     margin="normal"
-                    // onChange={handleChange("rut")}
-                    // value={rut}
+                    onChange={handleChange("correo")}
+                    value={correo}
                     required
                     fullWidth
                     id="email"
@@ -98,8 +104,8 @@ const ViewRegister = (props) => {
                 />
                 <TextField
                     margin="normal"
-                    // onChange={handleChange("rut")}
-                    // value={rut}
+                    onChange={handleChange("telefono")}
+                    value={telefono}
                     required
                     fullWidth
                     id="phone"
@@ -109,8 +115,8 @@ const ViewRegister = (props) => {
 
                 <TextField
                     margin="normal"
-                    onChange={handleChange("rut")}
-                    value={rut}
+                    onChange={handleChange("rutpersona")}
+                    value={rutpersona}
                     required
                     fullWidth
                     id="rutPerson"
@@ -118,15 +124,15 @@ const ViewRegister = (props) => {
                     name="rutPerson"
                     autoComplete="rut"
                 />
-                {validate(rut) ?
+                {validate(rutpersona) ?
                     <Alert severity="success">Rut válidado correctamente</Alert>
                     :
-                    rut && <Alert severity="error">Este rut no es válido</Alert>
+                    rutpersona && <Alert severity="error">Este rut no es válido</Alert>
                 }
                 <TextField
                     margin="normal"
-                    // onChange={handleChange("rut")}
-                    // value={rut}
+                    onChange={handleChange("clavesiipersona")}
+                    value={clavesiipersona}
                     required
                     fullWidth
                     id="clavesiipersona"
@@ -136,8 +142,8 @@ const ViewRegister = (props) => {
                 />
                 <TextField
                     margin="normal"
-                    // onChange={handleChange("rut")}
-                    // value={rut}
+                    onChange={handleChange("clavecertificado")}
+                    value={clavecertificado}
                     required
                     fullWidth
                     type="password"
@@ -147,25 +153,25 @@ const ViewRegister = (props) => {
                 />
                 <TextField
                     margin="normal"
-                    // onChange={handleChange("rut")}
-                    // value={rut}
+                    onChange={handleChange("rutempresa")}
+                    value={rutempresa}
                     required
                     fullWidth
                     id="rutempresa"
                     label="Rut Empresa"
                     name="rutempresa"
                 />
-                {validate(rut) ?
+                {validate(rutempresa) ?
                     <Alert severity="success">Rut válidado correctamente</Alert>
                     :
-                    rut && <Alert severity="error">Este rut no es válido</Alert>
+                    rutempresa && <Alert severity="error">Este rut no es válido</Alert>
                 }
                 <TextField
                     margin="normal"
                     required
                     fullWidth
-                    // onChange={handleChange("password")}
-                    // value={password}
+                    onChange={handleChange("clavesiiempresa")}
+                    value={clavesiiempresa}
                     name="clavesiiempresa"
                     label="Clave sii empresa"
                     type="password"
@@ -179,7 +185,7 @@ const ViewRegister = (props) => {
                 <Button
                     onClick={handleSubmit}
                     fullWidth
-                    // disabled={validate(rut) && password && password === repeatPassword && !loading ? false : true}
+                    disabled={validate(rutempresa) && validate(rutpersona) && telefono && correo && nombre && apellido && clavesiiempresa && clavecertificado && clavesiipersona && !loading ? false : true}
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                 >
@@ -199,20 +205,24 @@ const DashboardView = (props) => {
     };
 
     return (
-        <Box sx={{ width: '100%' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChangeValue} variant="fullWidth" aria-label="basic tabs example">
-                    <Tab label="Registrar Cuenta SII" {...a11yProps(0)} />
-                    <Tab label="Licencia" {...a11yProps(1)} />
-                </Tabs>
+        <Container component="main" maxWidth="sm">
+            <CssBaseline />
+            <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Tabs value={value} onChange={handleChangeValue} variant="fullWidth" aria-label="basic tabs example">
+                        <Tab label="Registrar Cuenta SII" {...a11yProps(0)} />
+                        <Tab label="Licencia" {...a11yProps(1)} />
+                    </Tabs>
+                </Box>
+                <TabPanel value={value} index={0}>
+                    <ViewRegister {...props} />
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                    Item Two
+                </TabPanel>
             </Box>
-            <TabPanel value={value} index={0}>
-                <ViewRegister {...props} />
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                Item Two
-            </TabPanel>
-        </Box>
+        </Container>
+
     );
 };
 
