@@ -12,8 +12,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
+import Link from '@mui/material/Link';
 import { validate } from 'rut.js';
 import logo from '../../images/apple-touch-icon.png';
+import { RestaurantMenu } from '@mui/icons-material';
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -68,10 +70,10 @@ const ViewRegister = (props) => {
                 Registrate
             </Typography>
             <Typography variant="subtitle2" gutterBottom component="div">
-                Asegurate de registrar exactamente la cuenta de Eboleta
+                Asegurate de registrar la cuenta de Eboleta
             </Typography>
             <Box sx={{ mt: 1 }}>
-                <TextField
+                {/* <TextField
                     margin="normal"
                     onChange={handleChange("nombre")}
                     value={nombre}
@@ -91,8 +93,8 @@ const ViewRegister = (props) => {
                     id="lastName"
                     label="Apellido"
                     name="lastName"
-                />
-                <TextField
+                /> */}
+                {/* <TextField
                     margin="normal"
                     onChange={handleChange("correo")}
                     value={correo}
@@ -111,8 +113,8 @@ const ViewRegister = (props) => {
                     id="phone"
                     label="Telefono"
                     name="phone"
-                />
-
+                /> */}
+                
                 <TextField
                     margin="normal"
                     onChange={handleChange("rutpersona")}
@@ -140,7 +142,7 @@ const ViewRegister = (props) => {
                     name="clavesiipersona"
                     type="password"
                 />
-                <TextField
+                {/* <TextField
                     margin="normal"
                     onChange={handleChange("clavecertificado")}
                     value={clavecertificado}
@@ -176,16 +178,16 @@ const ViewRegister = (props) => {
                     label="Clave sii empresa"
                     type="password"
                     id="clavesiiempresa"
-                />
+                /> */}
 
                 <FormControlLabel
                     control={<Checkbox value="remember" color="primary" />}
-                    label="Acepto las politicas de privacidad de la empresa"
+                    label="Acepto las politicas de privacidad"
                 />
                 <Button
                     onClick={handleSubmit}
                     fullWidth
-                    disabled={validate(rutempresa) && validate(rutpersona) && telefono && correo && nombre && apellido && clavesiiempresa && clavecertificado && clavesiipersona && !loading ? false : true}
+                    disabled={validate(rutpersona) && clavesiipersona && !loading ? false : true}
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                 >
@@ -197,8 +199,71 @@ const ViewRegister = (props) => {
 
 }
 
+const ViewLicencia = (props) => {
+    const { licencia, handleChangelicencia, savelicencia } = props
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        >
+
+            <Avatar src={logo} sx={{ p: 1, width: 100, height: 100 }} />
+            <Typography component="h1" variant="h5">
+                Licencia
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom component="div">
+                Disfruta de todos los servicios que podemos ofrecer registrando tu licencia,
+                si aun no cuentas con la tuya
+                <Link href="#" variant="body2">
+                    {" Contáctanos"}
+                </Link>
+            </Typography>
+            <Box sx={{ mt: 1 }}>
+
+                <TextField
+                    margin="normal"
+                    onChange={handleChangelicencia}
+                    value={licencia}
+                    required
+                    fullWidth
+                    id="licencia"
+                    label="Licencia"
+                    name="licencia"
+                    autoFocus
+                />
+
+                <Button
+                    onClick={savelicencia}
+                    fullWidth
+                    disabled={licencia ? false : true}
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                >
+                    Registrar Licencia
+                </Button>
+            </Box>
+        </Box>
+    );
+}
+
+const scene = (key, props) => {
+    switch (key) {
+        case 1:  
+            return <ViewRegister {...props} />;
+        case 2:
+            return <ViewLicencia {...props} />;
+        case 3:
+            return;
+        case 4:  
+            return;
+    }    
+}
+
 const DashboardView = (props) => {
-    const [value, setValue] = useState(0);
+    const [value, setValue] = useState(1);
 
     const handleChangeValue = (event, newValue) => {
         setValue(newValue);
@@ -208,18 +273,7 @@ const DashboardView = (props) => {
         <Container component="main" maxWidth="sm">
             <CssBaseline />
             <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={value} onChange={handleChangeValue} variant="fullWidth" aria-label="basic tabs example">
-                        <Tab label="Registrar Cuenta SII" {...a11yProps(0)} />
-                        <Tab label="Licencia" {...a11yProps(1)} />
-                    </Tabs>
-                </Box>
-                <TabPanel value={value} index={0}>
-                    <ViewRegister {...props} />
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                    Item Two
-                </TabPanel>
+                {scene(value, props)}
             </Box>
         </Container>
 

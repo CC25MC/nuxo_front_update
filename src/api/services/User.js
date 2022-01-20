@@ -1,25 +1,21 @@
 import { request } from "../base";
 
-const endpoints = {
-    signUp: "/api/user",
-};
-
 export const signUp = async (payload) => {
-	const res = await request.post(endpoints.signUp, payload);
+	const res = await request.post("/api/user", payload);
 	return res.data;
 };
 
 export const deleteUser = async () => {
-    const res = await request.delete(endpoints.signUp);
+    const res = await request.delete("/api/user");
     return res.data;
 };
 
-export const putUsers = async () => {
-    const res = await request.put(endpoints.signUp);
+export const putUsers = async (payload) => {
+    const res = await request.put("/api/user", payload);
     return res.data;
 };
 
 export const getUsers = async () => {
-    const res = await request.get(endpoints.signUp);
+    const res = await request.get("/api/user");
     return res.data;
 };

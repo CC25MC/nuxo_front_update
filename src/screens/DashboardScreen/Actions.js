@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { format, clean } from 'rut.js'
-import { register } from '../../hooks';
+import { register, getUser } from '../../hooks';
 
 export const Actions = () => {
     const { isLoading, error, nuxoSignUp, status, data } = register();
-    console.log(error, status, data);
+    const { user }= getUser();
+    console.log(error, status, data, user);
     // useEffect(() => {
     //     if (error) {
     //     }
@@ -20,6 +21,7 @@ export const Actions = () => {
         rutempresa: "",
         clavesiiempresa: ""
     });
+    const [licencia, setlicencia] = useState("");
     const { 
         nombre, 
         apellido, 
@@ -37,12 +39,17 @@ export const Actions = () => {
                 prop === "rutpersona" || prop === "rutempresa" ? format(event.target.value) : event.target.value,
         });
     };
+    const handleChangelicencia = (event) =>{
+        setlicencia(event.target.value);
+    }
     const handleSubmit = () => {
         nuxoSignUp({ nombre, apellido, correo, telefono, rutpersona: clean(rutpersona), clavesiipersona, clavecertificado, rutempresa: clean(rutempresa), clavesiiempresa });
     }
     return {
         handleChange,
         handleSubmit,
+        handleChangelicencia,
+        licencia,
         loading: isLoading,
         nombre, 
         apellido, 
