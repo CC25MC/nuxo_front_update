@@ -21,6 +21,12 @@ const theme = createTheme({
       dark: '#ba000d',
       contrastText: '#000',
     },
+    success: {
+      light: '#81c784',
+      main: '#66bb6a',
+      dark: '#388e3c',
+      contrastText: '#000',
+    }
   },
   breakpoints: {
     values: {
