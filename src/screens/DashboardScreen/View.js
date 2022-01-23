@@ -9,10 +9,12 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Alert from '@mui/material/Alert';
-import CircularProgress from '@mui/material/CircularProgress';
 import Link from '@mui/material/Link';
 import { validate } from 'rut.js';
 import logo from '../../images/android-chrome-512x512.png';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
 
 const ViewRegister = (props) => {
     const {
@@ -20,11 +22,13 @@ const ViewRegister = (props) => {
         handleSubmit,
         loading,
         rutpersona,
-        clavesiipersona} = props;
+        clavesiipersona,
+        user,
+        setScene } = props;
     return (
 
         <Box sx={{ mt: 1 }}>
-    
+
             <TextField
                 margin="normal"
                 onChange={handleChange("rutpersona")}
@@ -52,7 +56,7 @@ const ViewRegister = (props) => {
                 name="clavesiipersona"
                 type="password"
             />
-    
+
             <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Acepto las politicas de privacidad"
@@ -64,15 +68,30 @@ const ViewRegister = (props) => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
             >
-                {false ? <CircularProgress color="secondary" /> : "Registrate"}
+                Registrate
             </Button>
+            {user.nombre ?
+                <Button
+                    onClick={() => setScene(user.nombre ? 4 : 1)}
+                    fullWidth
+                    variant="outlined"
+                    sx={{ mt: 1, mb: 2 }}
+                >
+                    Volver
+                </Button>
+                :
+                null
+            }
+
         </Box>
     );
 
 }
 
 const ViewLicencia = (props) => {
-    const { licencia, handleChangelicencia, saveLicenc, setScene } = props
+    const { licencia, handleChangelicencia, saveLicenc,
+        user,
+        setScene } = props
     return (
         <Box sx={{ mt: 1 }}>
             <TextField
@@ -97,12 +116,12 @@ const ViewLicencia = (props) => {
                 Registrar Licencia
             </Button>
             <Button
-                onClick={() => setScene(2)}
+                onClick={() => setScene(user.nombre ? 4 : 2)}
                 fullWidth
                 variant="outlined"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 1, mb: 2 }}
             >
-                Omitir
+                {user.nombre ? "Volver" : "Omitir"}
             </Button>
         </Box>
     );
@@ -111,13 +130,14 @@ const ViewLicencia = (props) => {
 const ViewProfile = (props) => {
     const {
         handleChange,
-        handleSubmit,
+        handleSubmitprofile,
         loading,
         nombre,
         apellido,
         correo,
         telefono,
-        setScene } = props;
+        setScene,
+        user } = props;
     return (
 
         <Box sx={{ mt: 1 }}>
@@ -160,7 +180,7 @@ const ViewProfile = (props) => {
             />
 
             <Button
-                onClick={handleSubmit}
+                onClick={handleSubmitprofile}
                 fullWidth
                 disabled={!loading ? false : true}
                 variant="contained"
@@ -169,12 +189,12 @@ const ViewProfile = (props) => {
                 Guardar
             </Button>
             <Button
-                onClick={() => setScene(3)}
+                onClick={() => setScene(user.nombre ? 4 : 3)}
                 fullWidth
                 variant="outlined"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 1, mb: 2 }}
             >
-                Omitir
+                {user.nombre ? "Volver" : "Omitir"}
             </Button>
         </Box>
     );
@@ -184,13 +204,14 @@ const ViewProfile = (props) => {
 const ViewEmpresa = (props) => {
     const {
         handleChange,
-        handleSubmit,
+        handleSubmitempresa,
         loading,
         rutpersona,
         clavesiipersona,
         clavecertificado,
         rutempresa,
-        clavesiiempresa } = props;
+        clavesiiempresa,
+        setScene } = props;
     return (
 
         <Box sx={{ mt: 1 }}>
@@ -232,7 +253,7 @@ const ViewEmpresa = (props) => {
             />
 
             <Button
-                onClick={handleSubmit}
+                onClick={handleSubmitempresa}
                 fullWidth
                 disabled={validate(rutpersona) && clavesiipersona && !loading ? false : true}
                 variant="contained"
@@ -244,7 +265,7 @@ const ViewEmpresa = (props) => {
                 onClick={() => setScene(4)}
                 fullWidth
                 variant="outlined"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 1, mb: 2 }}
             >
                 Omitir
             </Button>
@@ -254,6 +275,15 @@ const ViewEmpresa = (props) => {
 }
 
 const DashboardView = (props) => {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = (scene) => {
+        setAnchorEl(null);
+        props.setScene(scene);
+    };
 
     const sceneActions = [
         {
@@ -285,7 +315,7 @@ const DashboardView = (props) => {
         <>
             <Box sx={{
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: props?.scene === 4 ? "flex" : "column",
                 alignItems: 'center',
                 width: "100%",
                 padding: "10px",
@@ -294,6 +324,46 @@ const DashboardView = (props) => {
                 <Typography component="h1" variant="h5" color={"primary"}>
                     {sceneActions[props?.scene].title}
                 </Typography>
+                {
+                    props?.scene === 4 ?
+                        <Box sx={{
+                            marginLeft: "auto"
+                        }}>
+                            <IconButton
+                                onClick={handleClick}
+                                size="small"
+                                sx={{ ml: 2 }}
+                                aria-controls={open ? 'account-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                            >
+                                <Avatar sx={{ width: 32, height: 32 }}>N</Avatar>
+                            </IconButton>
+                            <Menu
+                                id="demo-positioned-menu"
+                                aria-labelledby="demo-positioned-button"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={() => handleClose(4)}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                            >
+                                <MenuItem onClick={() => handleClose(2)}>Perfil</MenuItem>
+                                <MenuItem onClick={() => handleClose(0)}>Cuenta SII Personal</MenuItem>
+                                <MenuItem onClick={() => handleClose(3)}>Cuenta SII Empresa</MenuItem>
+                                <MenuItem onClick={() => handleClose(1)}>Licencia</MenuItem>
+                            </Menu>
+                        </Box>
+                        :
+                        null
+                }
+
             </Box>
             <Container component="main" maxWidth="sm">
                 <CssBaseline />
@@ -307,7 +377,7 @@ const DashboardView = (props) => {
                     >
                         <Box sx={{ marginBottom: props?.scene === 4 ? 5 : "20px" }} />
                         <Avatar src={logo} sx={{ p: props?.scene === 4 ? 5 : 1, width: props?.scene === 4 ? 350 : 100, height: props?.scene === 4 ? 350 : 100 }} />
-                        <Typography component={props?.scene === 4 ? "h1": "div"} variant={props?.scene === 4 ? "h4": "subtitle2"} color={props?.scene === 4 ? "#388e3c" : ""} >
+                        <Typography component={props?.scene === 4 ? "h1" : "div"} variant={props?.scene === 4 ? "h4" : "subtitle2"} color={props?.scene === 4 ? "#388e3c" : ""} >
                             {sceneActions[props?.scene].subtitle}
                             {sceneActions[props?.scene].title === "Licencia"
                                 &&

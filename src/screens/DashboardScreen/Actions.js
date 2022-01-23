@@ -2,27 +2,31 @@ import { useState, useEffect } from 'react';
 import { format, clean } from 'rut.js'
 import { register, getUser } from '../../hooks';
 
+const dataValues = {
+    nombre: "",
+    apellido: "",
+    correo: "",
+    telefono: "",
+    rutpersona: "",
+    clavesiipersona: "",
+    clavecertificado: "",
+    rutempresa: "",
+    clavesiiempresa: ""
+}
+
 export const Actions = () => {
-    const { isLoading, error, nuxoSignUp, status, data } = register();
-    const { user } = getUser();
-    console.log(error, status, data, user);
-    // useEffect(() => {
-    //     if (error) {
-    //     }
-    // }, [error]);
-    const [values, setValues] = useState({
-        nombre: "",
-        apellido: "",
-        correo: "",
-        telefono: "",
-        rutpersona: "",
-        clavesiipersona: "",
-        clavecertificado: "",
-        rutempresa: "",
-        clavesiiempresa: ""
-    });
-    const [licencia, setlicencia] = useState("");
+    const { isLoading, error, nuxoSignUp, data } = register();
+    const { user, status: userStatus } = getUser();
+    const [values, setValues] = useState(dataValues);
     const [scene, setScene] = useState(0);
+    const [licencia, setlicencia] = useState("");
+    console.log(error, data, user);
+    useEffect(() => {
+        if(userStatus){
+            setValues(user);
+            setScene(4)
+        }
+    }, [user]);
 
     const {
         nombre,
@@ -44,27 +48,22 @@ export const Actions = () => {
     const handleChangelicencia = (event) => {
         setlicencia(event.target.value);
     }
-    const reset = () => {
-        setValues(
-            {
-                nombre: "",
-                apellido: "",
-                correo: "",
-                telefono: "",
-                rutpersona: "",
-                clavesiipersona: "",
-                clavecertificado: "",
-                rutempresa: "",
-                clavesiiempresa: ""
-            }
-        );
-    }
+
     const handleSubmit = () => {
-        nuxoSignUp({ nombre, apellido, correo, telefono, rutpersona: clean(rutpersona), clavesiipersona, clavecertificado, rutempresa: clean(rutempresa), clavesiiempresa });
+        nuxoSignUp({ rutpersona: clean(rutpersona), clavesiipersona });
         setScene(scene === 0 ? 1 : scene === 2 ? 3 : 4);
     }
 
-    const saveLicenc = () =>{ 
+    const handleSubmitprofile = () => {
+        nuxoSignUp({ nombre, apellido, correo, telefono, rutpersona: clean(rutpersona), clavesiipersona });
+        setScene(scene === 0 ? 1 : scene === 2 ? 3 : 4);
+    }
+
+    const handleSubmitempresa = () => {
+        nuxoSignUp({ nombre, apellido, correo, telefono, rutpersona: clean(rutpersona), clavesiipersona });
+        setScene(scene === 0 ? 1 : scene === 2 ? 3 : 4);
+    }
+    const saveLicenc = () => {
         console.log(licencia);
         setScene(2);
     }
@@ -72,6 +71,8 @@ export const Actions = () => {
     return {
         handleChange,
         handleSubmit,
+        handleSubmitprofile,
+        handleSubmitempresa,
         handleChangelicencia,
         saveLicenc,
         licencia,
@@ -86,7 +87,8 @@ export const Actions = () => {
         rutempresa,
         clavesiiempresa,
         scene,
-        setScene
+        setScene,
+        user
     };
 };
 
