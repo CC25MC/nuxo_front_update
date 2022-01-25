@@ -33,6 +33,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.24.0",
+    "decompress": "^4.2.1",
     "electron-is-dev": "^1.2.0",
     "electron-positioner": "^4.1.0",
     "react": "^17.0.1",
@@ -40,6 +41,7 @@
     "react-query": "^3.33.6",
     "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.1",
+    "rimraf": "^3.0.2",
     "rut.js": "^2.1.0",
     "sqlite3": "^5.0.2",
     "web-vitals": "^0.2.4"
