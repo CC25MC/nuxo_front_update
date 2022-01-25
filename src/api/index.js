@@ -1,8 +1,9 @@
-import { request } from "./base";
-import { User } from "./services";
+import { request, versionApi } from "./base";
+import { User, Version, Licence } from "./services";
 
 // request.auth = auth;
 // request.ticket = Ticket;
 request.user = User;
-
-export default request;
+request.licence = Licence;
+versionApi.version = Version;
+export { request, versionApi };

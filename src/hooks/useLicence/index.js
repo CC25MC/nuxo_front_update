@@ -2,7 +2,7 @@ import { request } from "../../api";
 import { useMutation, useQuery } from 'react-query';
 
 
-const getUser = () => {
+const getLicence = () => {
     const { isLoading, data, error } = useQuery(
         "/users",
         () => request.user.getUsers()
@@ -16,13 +16,12 @@ const getUser = () => {
 }
 
 
-const register = () => {
+const SaveLicence = () => {
     const { user } = getUser();
     const {
         mutate: nuxoSignUp,
         isLoading,
         error,
-        status,
         data
     } = useMutation(
         (payload) => user?.rutpersona ? request.user.putUsers(payload) : request.user.signUp(payload)
@@ -38,6 +37,6 @@ const register = () => {
 };
 
 export {
-    register,
-    getUser
+    getLicence,
+    SaveLicence
 };

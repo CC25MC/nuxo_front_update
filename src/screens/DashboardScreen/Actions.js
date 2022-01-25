@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { format, clean } from 'rut.js'
-import { register, getUser } from '../../hooks';
+import { register, getUser, getVersion } from '../../hooks';
 
 const dataValues = {
     nombre: "",
@@ -20,9 +20,12 @@ export const Actions = () => {
     const [values, setValues] = useState(dataValues);
     const [scene, setScene] = useState(0);
     const [licencia, setlicencia] = useState("");
-    console.log(error, data, user);
+    const { version } = getVersion();
+    // console.log(error, data, user);
+    console.log(version);
+
     useEffect(() => {
-        if(userStatus){
+        if (userStatus) {
             setValues(user);
             setScene(4)
         }
