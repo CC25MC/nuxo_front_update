@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, Tray } = require('electron')
+const { app, BrowserWindow, Menu, Tray,ipcMain } = require('electron')
 const path = require('path')
 const Positioner = require('electron-positioner')
 const isDev = require('electron-is-dev')
@@ -9,6 +9,7 @@ const pluginPath = isDev ? path.join(
   __dirname,
   '../statico/nuxo-win'
 ) : path.join(__dirname, '../../statico/nuxo-win.exe');
+
 
 var win;
 var trayIcon;
@@ -29,6 +30,11 @@ const server = () => {
   });
 }
 
+ipcMain.on('restart_app', (event, arg) => {
+  //autoUpdater.quitAndInstall();
+  server();
+});
+
 function createWindow() {
   // Create the browser window.
   // const menu = Menu.buildFromTemplate(template);
@@ -40,8 +46,10 @@ function createWindow() {
     icon: iconPath,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: false,
-      contextIsolation: false
+      enableRemoteModule: true,
+      contextIsolation: false,
+      nodeIntegrationInWorker: true,
+      nodeIntegrationInSubFrames: true
     }
   })
   // win.setMenu(null);
