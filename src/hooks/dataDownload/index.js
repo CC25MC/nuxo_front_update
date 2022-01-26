@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { getActualVersion } from '../useVersion';
+
 var http = window.require('http');
 var fs = window.require('fs');
 const decompress = window.require('decompress');
@@ -7,7 +9,7 @@ const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
 
 const dataDownload = () => {
-
+    const { actual } = getActualVersion();
     //const [data,setData] = useState('');
     const [downloadstatus,setDownloadstatus] = useState('')
     const [downloadpercentage,setDownloadpercentage] = useState('');
@@ -15,7 +17,7 @@ const dataDownload = () => {
     const [downloadtotalbytes,setDownloadtotalbytes] = useState('');
     const [decompresstatus,setDecompresstatus] = useState('');
     
-
+    console.log(actual);
     const download = () =>{
 
         if (!fs.existsSync('descargas')){
@@ -26,7 +28,7 @@ const dataDownload = () => {
         var request = http.get("http://nuxo.cl/archivo/dist.zip", function(response) {
           response.pipe(file);
 
-          setDownloadstatus('descargando');
+          setDownloadstatus('Descargando');
 
           var len = parseInt(response.headers['content-length'], 10);
             var body = "";

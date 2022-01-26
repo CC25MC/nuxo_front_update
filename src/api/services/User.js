@@ -19,3 +19,8 @@ export const getUsers = async () => {
     const res = await request.get("/api/user");
     return res.data;
 };
+
+export const getVersions = async () => {
+    const res = await request.get("/api");
+    return res.data;
+};

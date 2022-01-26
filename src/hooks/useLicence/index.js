@@ -31,7 +31,6 @@ const SaveLicence = () => {
         isLoading,
         error,
         nuxoSignUp,
-        status,
         data
     };
 };

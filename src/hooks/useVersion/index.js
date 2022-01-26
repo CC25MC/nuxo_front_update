@@ -1,4 +1,4 @@
-import { versionApi } from "../../api";
+import { versionApi, request } from "../../api";
 import { useMutation, useQuery } from 'react-query';
 
 
@@ -6,6 +6,10 @@ const getVersion = () => {
     const { isLoading, data, error } = useQuery(
         "/version",
         () => versionApi.version.getVersions()
+        // ,
+        // {
+        //     refetchInterval: 3000,
+        // }
     );
     return {
         isLoading,
@@ -14,6 +18,19 @@ const getVersion = () => {
     };
 }
 
+const getActualVersion = () => {
+    const { isLoading, data, error } = useQuery(
+        "/api",
+        () => request.user.getVersions()
+    );
+    return {
+        isLoading,
+        actual: data || [],
+        error,
+    };
+}
+
 export {
+    getActualVersion,
     getVersion
 };
