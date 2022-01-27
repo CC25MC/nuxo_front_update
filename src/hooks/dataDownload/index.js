@@ -25,7 +25,7 @@ const dataDownload = () => {
         }
 
         var file = fs.createWriteStream("descargas/file.zip");
-        var request = http.get("http://nuxo.cl/archivo/dist.zip", function(response) {
+        var request = http.get(`http://descargas.nuxo.cl/storage/${version?.url}`, function(response) {
           response.pipe(file);
 
           setDownloadstatus('Descargando');
@@ -54,7 +54,8 @@ const dataDownload = () => {
             setDownloadstatus('descarga finalizada');
           });
         }).on('error', function(err) { // Handle errors
-          fs.unlink("descargas/file.zip"); // Delete the file async. (But we don't check the result)
+          //fs.unlinkSync("descargas/file.zip"); // Delete the file async. (But we don't check the result)
+          console.log(err);
           setDownloadstatus('descarga erronea');
           setDownloadpercentage('');
           setDownloadbytes('');
@@ -71,6 +72,15 @@ const dataDownload = () => {
         var request = await http.get("http://localhost:9000/api/server/close", function(response) {
           setDecompresstatus('apagando el servidor')
         });
+        //crear carpeta temp
+        if (!fs.existsSync('temp')){
+          fs.mkdirSync('temp');
+        }
+        //respaldar db
+        fs.copyFile('statico/db/data/database.sqlite', 'temp/database.sqlite', (err) => {
+          if (err) throw err;
+          console.log('source.txt was copied to destination.txt');
+        });
         //borrar archivos
         setDecompresstatus('borrando archivos actuales')
         await rimraf("statico", function () { setDecompresstatus('archivos borrados'); });
@@ -78,14 +88,28 @@ const dataDownload = () => {
         if (!fs.existsSync('statico')){
           fs.mkdirSync('statico');
         }
+        if (!fs.existsSync('statico/db')){
+          fs.mkdirSync('statico/db');
+        }
+        if (!fs.existsSync('statico/db/data')){
+          fs.mkdirSync('statico/db/data');
+        }
         //descomprimir
         await setDecompresstatus('descomprimiento archivos')
         const files = decompress('descargas/file.zip', 'statico').then(files => {
             setDecompresstatus('archivos descomprimidos con exito')
+        //pegar base de datos
+        fs.copyFile('temp/database.sqlite','statico/db/data/database.sqlite' , (err) => {
+          if (err) throw err;
+          console.log('source.txt was copied to destination.txt');
+        });
+        rimraf("temp", function () { setDecompresstatus('archivos borrados'); });
         //iniciar servidor
         ipcRenderer.send('restart_app');
         setDecompresstatus('reiniciando servidor')
         });
+        //borrar temp
+        //await rimraf("temp", function () { setDecompresstatus('archivos borrados'); });
         
         
     }
