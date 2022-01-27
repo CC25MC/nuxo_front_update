@@ -1,8 +1,9 @@
 import React, { Suspense, lazy } from 'react'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QueryClientProvider, QueryClient } from 'react-query';
-import Notify from './notify';
+const Notify = lazy(() => import('./notify'));
 const DashboardScreen = lazy(() => import('./screens/DashboardScreen'));
+// import { Breadcrumbs } from "./components";
 
 const queryClient = new QueryClient();
 
@@ -39,10 +40,9 @@ const theme = createTheme({
 
 const App = () => {
 
-
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <QueryClientProvider client={queryClient} contextSharing={true} >
+      <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <DashboardScreen />
           <Notify />

@@ -4,7 +4,7 @@ import { useMutation, useQuery } from 'react-query';
 
 const getVersion = () => {
     const { isLoading, data, error } = useQuery(
-        "/version",
+        "/versionlast",
         () => versionApi.version.getVersions()
         // ,
         // {

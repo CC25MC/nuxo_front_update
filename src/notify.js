@@ -22,18 +22,18 @@ const Notify = () => {
     downloadtotalbytes,
     decompresstatus } = dataDownload();
 
-  // const chekingUpdate = () => {
-  //   const ver = Object.values(version); // Obtengo la version disponible 
-  //   // console.log(actual);
-  //   // console.log(ver[ver.length - 1]);
-  //   if (ver[ver.length - 1]?.version === "0.0.1" ) {
-  //     console.log(ver[ver.length - 1]?.version > "0.0.3");
-  //   }
-  // }
+  const chekingUpdate = () => {
+    // console.log(actual);
+    // console.log(ver[ver.length - 1]);
+    if (version?.version > actual?.version) {
+      download();
+      setNotification(true)
+    }
+  }
 
-  // useEffect(() => {
-  //   chekingUpdate();
-  // }, [version, actual]);
+  useEffect(() => {
+    chekingUpdate();
+  }, [version, actual]);
 
   // ipcRenderer.on('message', function (event, text) {
   //   if (text === "Actualización Disponible.") {
@@ -45,18 +45,19 @@ const Notify = () => {
   //   console.log(text);
   // });
 
-  ipcRenderer.on('progressbar', function (event, text) {
-    setMessage("Descargando");
-    setProgress(text);
-  });
+  // ipcRenderer.on('progressbar', function (event, text) {
+  //   setMessage("Descargando");
+  //   setProgress(text);
+  // });
 
   const restartApp = () => {
-    ipcRenderer.send('restart_app');
+    descomprimir();
+    setNotification(false)
   }
 
-  setInterval(() => {
-    ipcRenderer.send('update_app');
-  }, 300000)
+  // setInterval(() => {
+  //   ipcRenderer.send('update_app');
+  // }, 300000)
 
   return (
     true &&
@@ -70,26 +71,19 @@ const Notify = () => {
       backgroundColor: "white",
       boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)"
     }}>
-      <div>{downloadstatus}</div>
-      <div>{downloadpercentage}</div>
-      <div>{downloadbytes}</div>
-      <div>{downloadtotalbytes}</div>
-      <div>{decompresstatus}</div>
-      <button onClick={download}>descargar</button>
-      <button onClick={descomprimir}>descomprimir</button>
-      {message}
+      {downloadstatus ? downloadstatus : "No hay Actualizaciones" }
       <Box style={{ marginTop: "10px" }} />
-      <LinearProgress variant="determinate" value={progress} />
+      <LinearProgress variant="determinate" value={downloadpercentage} />
       <Box style={{
         display: "flex",
         marginTop: 10,
         flexDirection: "row",
       }}>
-        {message === "Descargando" || message === "Actualización Disponible." ?
+        {downloadstatus === "Descargando" ?
           null
           :
           <>
-            <Button variant="contained" onClick={() => { setNotification(false) }}>Cerrar </Button>
+            {/* <Button variant="contained" onClick={() => { setNotification(false) }}>Cerrar </Button> */}
             <Button style={{ marginLeft: "auto" }} variant="contained" color="primary" onClick={restartApp}>Reiniciar App</Button>
           </>
         }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getActualVersion } from '../useVersion';
+import { getVersion } from '../useVersion';
 
 var http = window.require('http');
 var fs = window.require('fs');
@@ -9,23 +9,21 @@ const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
 
 const dataDownload = () => {
-    const { actual } = getActualVersion();
+    const { version } = getVersion();
     //const [data,setData] = useState('');
     const [downloadstatus,setDownloadstatus] = useState('')
     const [downloadpercentage,setDownloadpercentage] = useState('');
     const [downloadbytes,setDownloadbytes] = useState('');
     const [downloadtotalbytes,setDownloadtotalbytes] = useState('');
     const [decompresstatus,setDecompresstatus] = useState('');
-    
-    console.log(actual);
     const download = () =>{
 
         if (!fs.existsSync('descargas')){
             fs.mkdirSync('descargas');
         }
 
-        var file = fs.createWriteStream("descargas/file.zip");
-        var request = http.get("http://nuxo.cl/archivo/dist.zip", function(response) {
+        var file = fs.createWriteStream(`descargas/${version?.url}`);
+        var request = http.get(`http://descargas.nuxo.cl${version?.url}`, function(response) {
           response.pipe(file);
 
           setDownloadstatus('Descargando');
@@ -54,7 +52,7 @@ const dataDownload = () => {
             setDownloadstatus('descarga finalizada');
           });
         }).on('error', function(err) { // Handle errors
-          fs.unlink("descargas/file.zip"); // Delete the file async. (But we don't check the result)
+          fs.unlink(`descargas/${version.url}`); // Delete the file async. (But we don't check the result)
           setDownloadstatus('descarga erronea');
           setDownloadpercentage('');
           setDownloadbytes('');
