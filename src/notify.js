@@ -71,7 +71,14 @@ const Notify = () => {
       backgroundColor: "white",
       boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)"
     }}>
-      {downloadstatus ? downloadstatus : "No hay Actualizaciones" }
+      <div>{downloadstatus}</div>
+      <div>{downloadpercentage}</div>
+      <div>{downloadbytes}</div>
+      <div>{downloadtotalbytes}</div>
+      <div>{decompresstatus}</div>
+      <button onClick={download}>descargar</button>
+      <button onClick={descomprimir}>descomprimir</button>
+      {downloadstatus ? downloadstatus : "No hay Actualizaciones"}
       <Box style={{ marginTop: "10px" }} />
       <LinearProgress variant="determinate" value={downloadpercentage} />
       <Box style={{
@@ -84,7 +91,7 @@ const Notify = () => {
           :
           <>
             {/* <Button variant="contained" onClick={() => { setNotification(false) }}>Cerrar </Button> */}
-            <Button style={{ marginLeft: "auto" }} variant="contained" color="primary" onClick={restartApp}>Reiniciar App</Button>
+            <Button style={{ marginLeft: "auto" }} variant="contained" color="primary" onClick={restartApp}>Cerrar</Button>
           </>
         }
       </Box>
