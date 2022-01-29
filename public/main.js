@@ -1,15 +1,24 @@
-const { app, BrowserWindow, Menu, Tray,ipcMain } = require('electron')
+const { app, BrowserWindow, Menu, Tray, ipcMain } = require('electron')
 const path = require('path')
 const Positioner = require('electron-positioner')
 const isDev = require('electron-is-dev')
 require('@electron/remote/main').initialize()
 var child = require('child_process').execFile;
+
 const iconPath = path.join(__dirname, "images/favicon-16x16.png");
 const pluginPath = isDev ? path.join(
   __dirname,
   '../statico/nuxo-win'
 ) : path.join(__dirname, '../../statico/nuxo-win.exe');
 
+const template = [
+  {
+    label: 'Ayuda',
+    submenu: [
+      { label: 'Documentación' }
+    ]
+  }
+]
 
 var win;
 var trayIcon;
@@ -37,8 +46,8 @@ ipcMain.on('restart_app', (event, arg) => {
 
 function createWindow() {
   // Create the browser window.
-  // const menu = Menu.buildFromTemplate(template);
-  // Menu.setApplicationMenu(menu);
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
   win = new BrowserWindow({
     width: 470,
     height: 600,

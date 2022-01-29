@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { format, clean } from 'rut.js'
-import { register, getUser, SaveLicence } from '../../hooks';
+import { register, getUser, SaveLicence, getLicence } from '../../hooks';
+import { useSnackbar } from 'notistack';
 
 const dataValues = {
     nombre: "",
@@ -15,20 +16,45 @@ const dataValues = {
 }
 
 export const Actions = () => {
-    const { isLoading, error, nuxoSignUp, data } = register();
+    const { enqueueSnackbar } = useSnackbar();
+    const { isLoading, errorRegister, nuxoSignUp, data, status } = register();
     const { user, status: userStatus } = getUser();
     const [values, setValues] = useState(dataValues);
     const [scene, setScene] = useState(0);
     const [licencia, setlicencia] = useState("");
-    const { mutateLicence, data: licence } = SaveLicence()
-    console.log(licence);
+    const { mutateLicence, data: licence, errorLicence, licenStatus } = SaveLicence()
+    const { licenceGet, licenceStatus } = getLicence();
+    // console.log(licence);
 
     useEffect(() => {
         if (userStatus) {
             setValues(user);
             setScene(4)
         }
-    }, [user]);
+    }, [user, licence]);
+
+    useEffect(() => {
+        if (licenceStatus) {
+            setlicencia("");
+            enqueueSnackbar('Licencia Vencida por favor renuevala', { variant: 'error' });
+            setScene(1)
+        }else if (licenceGet?.licencia){
+            setlicencia(licenceGet?.licencia);
+            setScene(4)
+        }
+    }, [licenceGet]);
+
+    useEffect(() => {
+        if (errorRegister) {
+            enqueueSnackbar('Ah Ocurrido un error', { variant: 'error' });
+        }
+    }, [errorRegister]);
+
+    useEffect(() => {
+        if (errorLicence) {
+            enqueueSnackbar('Licencia No existe', { variant: 'error' });
+        }
+    }, [errorLicence]);
 
     const {
         nombre,
@@ -52,29 +78,24 @@ export const Actions = () => {
     }
 
     const handleSubmit = () => {
-        nuxoSignUp({ rutpersona: clean(rutpersona), clavesiipersona });
-        setScene(scene === 0 ? 1 : scene === 2 ? 3 : 4);
+        nuxoSignUp({ nombre, apellido, correo, telefono, rutpersona: clean(rutpersona), clavesiipersona, clavecertificado, rutempresa: clean(rutempresa), clavesiiempresa });
+        if (status) {
+            enqueueSnackbar('Datos registrados con exito', { variant: 'success' });
+            setScene(user?.rutpersona ? 4 : 1);
+        }
     }
 
-    const handleSubmitprofile = () => {
-        nuxoSignUp({ nombre, apellido, correo, telefono, rutpersona: clean(rutpersona), clavesiipersona });
-        setScene(scene === 0 ? 1 : scene === 2 ? 3 : 4);
-    }
-
-    const handleSubmitempresa = () => {
-        nuxoSignUp({ nombre, apellido, correo, telefono, rutpersona: clean(rutpersona), clavesiipersona });
-        setScene(scene === 0 ? 1 : scene === 2 ? 3 : 4);
-    }
     const saveLicenc = () => {
         mutateLicence({ licencia: licencia });
-        setScene(user?.rutpersona ? 4 : 2);
+        if (!licenStatus) {
+            enqueueSnackbar('Licencia registrada con exito', { variant: 'success' });
+            setScene(4);
+        }
     }
 
     return {
         handleChange,
         handleSubmit,
-        handleSubmitprofile,
-        handleSubmitempresa,
         handleChangelicencia,
         saveLicenc,
         licencia,

@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QueryClientProvider, QueryClient } from 'react-query';
+import { SnackbarProvider } from 'notistack';
 const Notify = lazy(() => import('./notify'));
 const DashboardScreen = lazy(() => import('./screens/DashboardScreen'));
 // import { Breadcrumbs } from "./components";
@@ -44,8 +45,10 @@ const App = () => {
     <Suspense fallback={<div>Loading...</div>}>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
-          <DashboardScreen />
-          <Notify />
+          <SnackbarProvider>
+            <DashboardScreen />
+            <Notify />
+          </SnackbarProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </Suspense>

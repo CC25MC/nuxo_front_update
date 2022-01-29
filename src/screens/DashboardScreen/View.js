@@ -56,11 +56,14 @@ const ViewRegister = (props) => {
                 name="clavesiipersona"
                 type="password"
             />
-
-            <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Acepto las politicas de privacidad"
-            />
+            {user?.rutpersona ?
+                null
+                :
+                <FormControlLabel
+                    control={<Checkbox value="remember" color="primary" />}
+                    label="Acepto las politicas de privacidad"
+                />
+            }
             <Button
                 onClick={handleSubmit}
                 fullWidth
@@ -70,9 +73,9 @@ const ViewRegister = (props) => {
             >
                 Registrate
             </Button>
-            {user.nombre ?
+            {user?.rutpersona ?
                 <Button
-                    onClick={() => setScene(user.nombre ? 4 : 1)}
+                    onClick={() => setScene(4)}
                     fullWidth
                     variant="outlined"
                     sx={{ mt: 1, mb: 2 }}
@@ -116,7 +119,7 @@ const ViewLicencia = (props) => {
                 Registrar Licencia
             </Button>
             <Button
-                onClick={() => setScene(user.nombre ? 4 : 2)}
+                onClick={() => setScene(4)}
                 fullWidth
                 variant="outlined"
                 sx={{ mt: 1, mb: 2 }}
@@ -130,7 +133,7 @@ const ViewLicencia = (props) => {
 const ViewProfile = (props) => {
     const {
         handleChange,
-        handleSubmitprofile,
+        handleSubmit,
         loading,
         nombre,
         apellido,
@@ -180,7 +183,7 @@ const ViewProfile = (props) => {
             />
 
             <Button
-                onClick={handleSubmitprofile}
+                onClick={handleSubmit}
                 fullWidth
                 disabled={!loading ? false : true}
                 variant="contained"
@@ -189,12 +192,12 @@ const ViewProfile = (props) => {
                 Guardar
             </Button>
             <Button
-                onClick={() => setScene(user.nombre ? 4 : 3)}
+                onClick={() => setScene(4)}
                 fullWidth
                 variant="outlined"
                 sx={{ mt: 1, mb: 2 }}
             >
-                {user.nombre ? "Volver" : "Omitir"}
+                Volver
             </Button>
         </Box>
     );
@@ -204,7 +207,7 @@ const ViewProfile = (props) => {
 const ViewEmpresa = (props) => {
     const {
         handleChange,
-        handleSubmitempresa,
+        handleSubmit,
         loading,
         rutpersona,
         clavesiipersona,
@@ -253,7 +256,7 @@ const ViewEmpresa = (props) => {
             />
 
             <Button
-                onClick={handleSubmitempresa}
+                onClick={handleSubmit}
                 fullWidth
                 disabled={validate(rutpersona) && clavesiipersona && !loading ? false : true}
                 variant="contained"
@@ -267,7 +270,7 @@ const ViewEmpresa = (props) => {
                 variant="outlined"
                 sx={{ mt: 1, mb: 2 }}
             >
-                Omitir
+                Volver
             </Button>
         </Box>
     );

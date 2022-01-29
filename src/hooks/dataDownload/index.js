@@ -17,7 +17,6 @@ const dataDownload = () => {
     const [downloadtotalbytes,setDownloadtotalbytes] = useState('');
     const [decompresstatus,setDecompresstatus] = useState('');
     
-    console.log(version);
     const download = () =>{
 
         if (!fs.existsSync('descargas')){

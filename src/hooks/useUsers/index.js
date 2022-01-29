@@ -6,6 +6,10 @@ const getUser = () => {
     const { isLoading, data, error } = useQuery(
         "/users",
         () => request.user.getUsers()
+        // ,
+        // {
+        //     refetchInterval: 30000,
+        // }
     );
     return {
         isLoading,
@@ -21,18 +25,17 @@ const register = () => {
     const {
         mutate: nuxoSignUp,
         isLoading,
-        error,
-        status,
+        error: errorRegister,
         data
     } = useMutation(
-        (payload) => user?.rutpersona ? request.user.putUsers(payload) : request.user.signUp(payload)
+        (payload) => user?.id ? request.user.putUsers(payload) : request.user.signUp(payload)
     );
 
     return {
         isLoading,
-        error,
+        errorRegister,
         nuxoSignUp,
-        status,
+        status: data?.success,
         data
     };
 };

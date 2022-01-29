@@ -8,9 +8,9 @@ const getLicence = () => {
     );
     return {
         isLoading,
-        user: data?.data[0] || [],
+        licenceGet: data?.data[0] || [],
         error,
-        status: data?.data[0]?.rutpersona ? true : false
+        licenceStatus: data?.vencida || false
     };
 }
 
@@ -19,7 +19,7 @@ const SaveLicence = () => {
     const {
         mutate: mutateLicence,
         isLoading,
-        error,
+        error: errorLicence,
         data
     } = useMutation(
         (payload) => request.licence.post(payload)
@@ -27,9 +27,10 @@ const SaveLicence = () => {
 
     return {
         isLoading,
-        error,
+        errorLicence,
         mutateLicence,
-        data
+        data,
+        licenStatus: data?.vencida || false
     };
 };
 
