@@ -88,6 +88,7 @@ const tray = () => {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Cerrar Aplicación', click: () => {
+        win.hide();
         win = null
         app.quit();
       }

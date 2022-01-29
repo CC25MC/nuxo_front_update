@@ -8,9 +8,9 @@ const getLicence = () => {
     );
     return {
         isLoading,
-        licenceGet: data?.data[0] || [],
+        licenceGet: data?.data[0] ? data?.data[0] : [],
         error,
-        licenceStatus: data?.vencida || false
+        licenceStatus: data?.vencida ? data?.vencida : false
     };
 }
 
@@ -30,7 +30,7 @@ const SaveLicence = () => {
         errorLicence,
         mutateLicence,
         data,
-        licenStatus: data?.vencida || false
+        licenStatus: data?.vencida ? data?.vencida : false
     };
 };
 
