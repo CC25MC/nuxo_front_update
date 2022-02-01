@@ -4,6 +4,8 @@ const Positioner = require('electron-positioner')
 const isDev = require('electron-is-dev')
 require('@electron/remote/main').initialize()
 var child = require('child_process').execFile;
+const fs = require("fs")
+
 
 const iconPath = path.join(__dirname, "images/favicon-16x16.png");
 const pluginPath = isDev ? path.join(
@@ -20,23 +22,33 @@ const template = [
   }
 ]
 
-var win;
+let win;
 var trayIcon;
 
 const server = () => {
-  child(pluginPath, {
-    cwd: isDev ? path.join(
-      __dirname,
-      '../statico'
-    ) : path.join(__dirname, '../../statico'),
-    windowsHide: true,
-  }, (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
+  fs.access(pluginPath, (error) => {
+    if (error) {
+      console.log("Directorio no existe");
+      win.webContents.send('message', "descargar servidor");
     }
-    console.log(data.toString());
-  });
+    else {
+      console.log("Directorio existe");
+      child(pluginPath, {
+        cwd: isDev ? path.join(
+          __dirname,
+          '../statico'
+        ) : path.join(__dirname, '../../statico'),
+        windowsHide: true,
+      }, (err, data) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        console.log(data.toString());
+      });
+    }
+  }
+  )
 }
 
 ipcMain.on('restart_app', (event, arg) => {
@@ -46,8 +58,8 @@ ipcMain.on('restart_app', (event, arg) => {
 
 function createWindow() {
   // Create the browser window.
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  // const menu = Menu.buildFromTemplate(template);
+  // Menu.setApplicationMenu(menu);
   win = new BrowserWindow({
     width: 470,
     height: 600,
@@ -98,11 +110,12 @@ const tray = () => {
 }
 
 app.on('ready', () => {
-  server();
   createWindow();
   tray();
 });
-
+// app.on('browser-window-created', function () {
+//   win.webContents.send('message', "descargar servidor");
+// })
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.

@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react'
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Button from '@material-ui/core/Button';
 import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
 import { dataDownload, getVersion, getActualVersion } from './hooks';
+const electron = window.require('electron');
+const ipcRenderer = electron.ipcRenderer;
 
 const Notify = () => {
   const [notification, setNotification] = useState(false);
@@ -30,6 +33,15 @@ const Notify = () => {
     chekingUpdate();
   }, [version, actual]);
 
+  useEffect(() => {
+    ipcRenderer.send('restart_app');
+  }, []);
+
+  ipcRenderer.on('message', function (event, text) {
+    download();
+    setNotification(true)
+  });
+
   const restartApp = () => {
     descomprimir();
     setNotification(false)
@@ -47,23 +59,26 @@ const Notify = () => {
       backgroundColor: "white",
       boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)"
     }}>
-      {downloadstatus ? downloadstatus : "No hay Actualizaciones"}
-      <Box style={{ marginTop: "10px" }} />
-      <LinearProgress variant="determinate" value={downloadpercentage} />
-      <Box style={{
-        display: "flex",
-        marginTop: 10,
-        flexDirection: "row",
-      }}>
-        {downloadstatus === "Descargando" ?
-          null
-          :
-          <>
-            {/* <Button variant="contained" onClick={() => { setNotification(false) }}>Cerrar </Button> */}
-            <Button style={{ marginLeft: "auto" }} variant="contained" color="primary" onClick={restartApp}>Cerrar</Button>
-          </>
-        }
-      </Box>
+      {downloadstatus === "descarga erronea" ?
+        <Alert severity="warning">Ups!! parece que el servidor no responde.</Alert>
+        :
+        <>
+          {downloadstatus ? downloadstatus : "Actualizacion Disponible"}
+          <Box style={{ marginTop: "10px" }} />
+          <LinearProgress variant="determinate" value={downloadpercentage} />
+          <Box style={{
+            display: "flex",
+            marginTop: 10,
+            flexDirection: "row",
+          }}>
+            {downloadstatus === "descarga finalizada" && (
+              <Button style={{ marginLeft: "auto" }} variant="contained" color="primary" onClick={restartApp}>Cerrar</Button>
+            )
+            }
+          </Box>
+        </>
+      }
+
     </Box>
   )
 }
