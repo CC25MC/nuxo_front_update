@@ -8,9 +8,9 @@ const getLicence = () => {
     );
     return {
         isLoading,
-        licenceGet: data?.data[0] ? data?.data[0] : [],
+        licenceGet: data?.success ? data?.data[0] : [],
         error,
-        licenceStatus: data?.vencida ? data?.vencida : false
+        licenceStatus: data?.success ? data?.vencida : false
     };
 }
 
