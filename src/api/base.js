@@ -5,5 +5,5 @@ export const request = create({
 });
 
 export const versionApi = create({
- 	baseURL: "https://descargas.nuxo.cl",
+ 	baseURL: "http://versiones.nuxo.vertragtech.com",
 });

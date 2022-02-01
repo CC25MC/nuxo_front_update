@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getVersion } from '../useVersion';
 
+var https = window.require('https');
 var http = window.require('http');
 var fs = window.require('fs');
 const decompress = window.require('decompress');
@@ -24,7 +25,7 @@ const dataDownload = () => {
         }
 
         var file = fs.createWriteStream("descargas/file.zip");
-        var request = http.get(`http://descargas.nuxo.cl/storage/${version?.url}`, function(response) {
+        var request = http.get(`http://versiones.nuxo.vertragtech.com/storage/${version?.url}`, function(response) {
           response.pipe(file);
 
           setDownloadstatus('Descargando');
