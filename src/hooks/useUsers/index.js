@@ -13,9 +13,9 @@ const getUser = () => {
     );
     return {
         isLoading,
-        user: data?.data[0] ? data?.data[0] : [],
+        user: data?.data ? data?.data[0] : [],
         error,
-        status: data?.data[0]?.rutpersona ? true : false
+        status: data?.data ? true : false
     };
 }
 

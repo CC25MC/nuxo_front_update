@@ -38,7 +38,7 @@ export const Actions = () => {
             setlicencia("");
             enqueueSnackbar('Licencia Vencida por favor renuevala', { variant: 'error' });
             setScene(1)
-        }else if (licenceGet?.licencia){
+        } else if (licenceGet?.licencia) {
             setlicencia(licenceGet?.licencia);
             setScene(4)
         }
@@ -56,6 +56,16 @@ export const Actions = () => {
         }
     }, [errorLicence]);
 
+    useEffect(() => {
+        if (status) {
+            enqueueSnackbar('Datos registrados con exito', { variant: 'success' });
+            setScene(user?.rutpersona ? 4 : 1);
+        }
+        if (!licenStatus && user?.rutpersona) {
+            enqueueSnackbar('Licencia registrada con exito', { variant: 'success' });
+            setScene(4);
+        }
+    }, [status, licenStatus]);
     const {
         nombre,
         apellido,
@@ -79,18 +89,10 @@ export const Actions = () => {
 
     const handleSubmit = () => {
         nuxoSignUp({ nombre, apellido, correo, telefono, rutpersona: clean(rutpersona), clavesiipersona, clavecertificado, rutempresa: clean(rutempresa), clavesiiempresa });
-        if (status) {
-            enqueueSnackbar('Datos registrados con exito', { variant: 'success' });
-            setScene(user?.rutpersona ? 4 : 1);
-        }
     }
 
     const saveLicenc = () => {
         mutateLicence({ licencia: licencia });
-        if (!licenStatus) {
-            enqueueSnackbar('Licencia registrada con exito', { variant: 'success' });
-            setScene(4);
-        }
     }
 
     return {

@@ -124,7 +124,7 @@ const ViewLicencia = (props) => {
                 variant="outlined"
                 sx={{ mt: 1, mb: 2 }}
             >
-                {user.nombre ? "Volver" : "Omitir"}
+                {user?.nombre ? "Volver" : "Omitir"}
             </Button>
         </Box>
     );

@@ -10,7 +10,7 @@ const fs = require("fs")
 const iconPath = path.join(__dirname, "images/favicon-16x16.png");
 const pluginPath = isDev ? path.join(
   __dirname,
-  '../statico/nuxo-win'
+  '../statico/nuxo-win.exe'
 ) : path.join(__dirname, '../../statico/nuxo-win.exe');
 
 const template = [
@@ -26,29 +26,25 @@ let win;
 var trayIcon;
 
 const server = () => {
-  fs.access(pluginPath, (error) => {
-    if (error) {
-      console.log("Directorio no existe");
-      win.webContents.send('message', "descargar servidor");
-    }
-    else {
-      console.log("Directorio existe");
-      child(pluginPath, {
-        cwd: isDev ? path.join(
-          __dirname,
-          '../statico'
-        ) : path.join(__dirname, '../../statico'),
-        windowsHide: true,
-      }, (err, data) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        console.log(data.toString());
-      });
-    }
+  if (fs.existsSync(pluginPath)) {
+    console.log("Directorio existe");
+    child(pluginPath, {
+      cwd: isDev ? path.join(
+        __dirname,
+        '../statico'
+      ) : path.join(__dirname, '../../statico'),
+      windowsHide: true,
+    }, (err, data) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log(data.toString());
+    });
+  } else {
+    console.log("Directorio no existe");
+    win.webContents.send('message', "descargar servidor");
   }
-  )
 }
 
 ipcMain.on('restart_app', (event, arg) => {
@@ -58,8 +54,8 @@ ipcMain.on('restart_app', (event, arg) => {
 
 function createWindow() {
   // Create the browser window.
-  // const menu = Menu.buildFromTemplate(template);
-  // Menu.setApplicationMenu(menu);
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
   win = new BrowserWindow({
     width: 470,
     height: 600,
