@@ -23,9 +23,14 @@ const dataDownload = () => {
         if (!fs.existsSync('descargas')){
             fs.mkdirSync('descargas');
         }
+        const agent = new https.Agent({
+          rejectUnauthorized: false,
+        });
 
         var file = fs.createWriteStream("descargas/file.zip");
-        var request = http.get(`http://versiones.nuxo.vertragtech.com/storage/${version?.url}`, function(response) {
+        var request = https.get(`https://versiones.nuxo.vertragtech.com/storage/${version?.url}`,{agent}, function(response) {
+          console.log(`http://versiones.nuxo.vertragtech.com/storage/${version?.url}`);
+          console.log(version);
           response.pipe(file);
 
           setDownloadstatus('Descargando');

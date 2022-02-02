@@ -103,6 +103,7 @@ const tray = () => {
         win.hide();
         win = null
         app.quit();
+        process.exit();
       }
     }
   ])
