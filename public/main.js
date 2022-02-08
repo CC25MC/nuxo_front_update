@@ -17,8 +17,12 @@ const template = [
   {
     label: 'Ayuda',
     submenu: [
-      { label: 'Documentación' }
-    ]
+      {
+        label: 'Documentación', click: () => {
+          
+        }
+      },
+    ],
   }
 ]
 
@@ -27,7 +31,6 @@ var trayIcon;
 
 const server = () => {
   if (fs.existsSync(pluginPath)) {
-    console.log("Directorio existe");
     child(pluginPath, {
       cwd: isDev ? path.join(
         __dirname,
@@ -41,9 +44,9 @@ const server = () => {
       }
       console.log(data.toString());
     });
+    win.webContents.send('message', "Directorio existe");
   } else {
-    console.log("Directorio no existe");
-    win.webContents.send('message', "descargar servidor");
+    win.webContents.send('message', "Directorio no existe");
   }
 }
 

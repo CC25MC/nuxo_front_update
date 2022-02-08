@@ -7,8 +7,20 @@ import { dataDownload, getVersion, getActualVersion } from './hooks';
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
 
+const style = {
+  position: "fixed",
+  bottom: "20px",
+  left: "20px",
+  width: "300px",
+  padding: "20px",
+  borderRadius: "5px",
+  backgroundColor: "white",
+  boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)"
+}
+
 const Notify = () => {
   const [notification, setNotification] = useState(false);
+  const [serverStatus, setServerStatus] = useState("");
   const { version } = getVersion();
   const { actual } = getActualVersion();
   const {
@@ -38,10 +50,15 @@ const Notify = () => {
   }, []);
 
   ipcRenderer.on('message', function (event, text) {
-    download();
-    setNotification(true)
+    if (text === "Directorio no existe") {
+      setServerStatus(text);
+      download();
+      setNotification(true)
+    } else {
+      setServerStatus(text);
+    }
   });
-
+  
   const restartApp = () => {
     descomprimir();
     setNotification(false)
@@ -49,16 +66,7 @@ const Notify = () => {
 
   return (
     notification &&
-    <Box style={{
-      position: "fixed",
-      bottom: "20px",
-      left: "20px",
-      width: "300px",
-      padding: "20px",
-      borderRadius: "5px",
-      backgroundColor: "white",
-      boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)"
-    }}>
+    <Box style={style}>
       {downloadstatus === "descarga erronea" ?
         <Alert severity="warning">Ups!! parece que el servidor no responde.</Alert>
         :
