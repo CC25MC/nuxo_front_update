@@ -75,7 +75,7 @@ export const Actions = () => {
         clavesiipersona,
         clavecertificado,
         rutempresa,
-        clavesiiempresa } = values;
+        clavesiiempresa } = values || {};
     const handleChange = (prop) => (event) => {
         setValues({
             ...values,

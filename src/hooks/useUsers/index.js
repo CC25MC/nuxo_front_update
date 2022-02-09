@@ -15,7 +15,7 @@ const getUser = () => {
         isLoading,
         user: data?.data ? data?.data[0] : [],
         error,
-        status: data?.data ? true : false
+        status: data?.data.lenght ? true : false
     };
 }
 
