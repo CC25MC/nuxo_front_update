@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "main": "public/main.js",
   "description": "nuxo_front_update project",
-  "author": "Cesar Casadiego",
+  "author": "Nuxo",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

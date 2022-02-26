@@ -3,7 +3,9 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Button from '@material-ui/core/Button';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
-import { dataDownload, getVersion, getActualVersion } from './hooks';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+import { getVersion, getActualVersion } from './hooks';
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
 
@@ -21,22 +23,15 @@ const style = {
 const Notify = () => {
   const [notification, setNotification] = useState(false);
   const [serverStatus, setServerStatus] = useState("");
+  const [downloadstatus, setDownloadstatus] = useState('');
+  const [fileLoading, setFileLoading] = useState(false);
+  const [downloadpercentage, setDownloadpercentage] = useState('');
   const { version } = getVersion();
   const { actual } = getActualVersion();
-  const {
-    download,
-    descomprimir,
-    downloadstatus,
-    downloadpercentage,
-    downloadbytes,
-    downloadtotalbytes,
-    decompresstatus } = dataDownload();
 
   const chekingUpdate = () => {
-    // console.log(actual);
-    // console.log(ver[ver.length - 1]);
     if (version?.version > actual?.version) {
-      download();
+      ipcRenderer.send('downloadUpdate');
       setNotification(true)
     }
   }
@@ -52,42 +47,82 @@ const Notify = () => {
   ipcRenderer.on('message', function (event, text) {
     if (text === "Directorio no existe") {
       setServerStatus(text);
-      download();
+      // download();
       setNotification(true)
     } else {
       setServerStatus(text);
     }
   });
+
+  ipcRenderer.on('status', function (event, text) {
+    setDownloadstatus(text)
+    setNotification(true)
+  });
+
+  ipcRenderer.on('decompress', function (event, text) {
+    if (text === "apagando el servidor" || text === "descomprimiento archivos") {
+      setFileLoading(true);
+      setDownloadstatus(text)
+    } else if (text === "reiniciando servidor") {
+      setFileLoading(false);
+    }
+  });
   
+  ipcRenderer.on('percentage', function (event, text) {
+    setDownloadpercentage(text)
+  });
+
   const restartApp = () => {
-    descomprimir();
+    ipcRenderer.send('decompressUpdate');
     setNotification(false)
   }
 
   return (
-    notification &&
-    <Box style={style}>
-      {downloadstatus === "descarga erronea" ?
-        <Alert severity="warning">Ups!! parece que el servidor no responde.</Alert>
-        :
-        <>
-          {downloadstatus ? downloadstatus : "Actualizacion Disponible"}
-          <Box style={{ marginTop: "10px" }} />
-          <LinearProgress variant="determinate" value={downloadpercentage} />
-          <Box style={{
-            display: "flex",
-            marginTop: 10,
-            flexDirection: "row",
-          }}>
-            {downloadstatus === "descarga finalizada" && (
-              <Button style={{ marginLeft: "auto" }} variant="contained" color="primary" onClick={restartApp}>Cerrar</Button>
-            )
-            }
-          </Box>
-        </>
-      }
+    <>
+      {fileLoading && (<Box style={{
+        position: "absolute",
+        top: "0px",
+        width: "100%",
+        height: "100%",
+        opacity: "70%",
+        backgroundColor: "black",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
 
-    </Box>
+        <Typography variant="h6" color="white" gutterBottom component="div">
+          {downloadstatus}
+        </Typography>
+        <CircularProgress size={100} />
+
+      </Box>)}
+      {notification && (
+        <Box style={style}>
+          {downloadstatus === "descarga erronea" ?
+            <Alert severity="warning">Ups!! parece que el servidor no responde.</Alert>
+            :
+            <>
+              {downloadstatus ? downloadstatus : "Actualizacion Disponible"}
+              <Box style={{ marginTop: "10px" }} />
+              <LinearProgress variant="determinate" value={downloadpercentage} />
+              <Box style={{
+                display: "flex",
+                marginTop: 10,
+                flexDirection: "row",
+              }}>
+                {downloadstatus === "descarga finalizada" && (
+                  <Button style={{ marginLeft: "auto" }} variant="contained" color="primary" onClick={restartApp}>Cerrar</Button>
+                )
+                }
+              </Box>
+            </>
+          }
+
+        </Box>
+      )}
+    </>
   )
 }
 
