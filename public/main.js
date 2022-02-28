@@ -22,8 +22,9 @@ const template = [
     label: 'Ayuda',
     submenu: [
       {
-        label: 'Documentación', click: () => {
-
+        label: 'Documentación', click: async () => {
+          const { shell } = require('electron')
+          await shell.openExternal('https://nuxo.vertragtech.com/documentacion')
         }
       },
     ],
@@ -116,6 +117,7 @@ const server = () => {
     win.webContents.send('message', "Directorio existe");
   } else {
     //Comienza a descargar
+    win.webContents.send('message', "Directorio no existe");
     download()
   }
 }
@@ -246,6 +248,7 @@ const tray = () => {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Cerrar Aplicación', click: () => {
+        win.webContents.send('exit', 'cerrando aplicacion');
         win.hide();
         win = null
         app.quit();

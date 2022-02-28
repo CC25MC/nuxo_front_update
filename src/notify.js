@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-import { getVersion, getActualVersion } from './hooks';
+import { getVersion, getActualVersion, useServer } from './hooks';
 const electron = window.require('electron');
 const ipcRenderer = electron.ipcRenderer;
 
@@ -22,7 +22,8 @@ const style = {
 
 const Notify = () => {
   const [notification, setNotification] = useState(false);
-  const [serverStatus, setServerStatus] = useState("");
+  const { server, setServer }  = useServer();
+  // const [serverStatus, setServerStatus] = useState("");
   const [downloadstatus, setDownloadstatus] = useState('');
   const [fileLoading, setFileLoading] = useState(false);
   const [downloadpercentage, setDownloadpercentage] = useState('');
@@ -41,16 +42,19 @@ const Notify = () => {
   }, [version, actual]);
 
   useEffect(() => {
-    ipcRenderer.send('restart_app');
+    if (server === "" || server === "Directorio existe") {
+      ipcRenderer.send('restart_app');
+    } else if (server === "Directorio no existe"){
+      setNotification(true)
+    }
   }, []);
 
   ipcRenderer.on('message', function (event, text) {
     if (text === "Directorio no existe") {
-      setServerStatus(text);
-      // download();
+      setServer(text);
       setNotification(true)
     } else {
-      setServerStatus(text);
+      setServer(text);
     }
   });
 
@@ -67,9 +71,13 @@ const Notify = () => {
       setFileLoading(false);
     }
   });
-  
+
   ipcRenderer.on('percentage', function (event, text) {
     setDownloadpercentage(text)
+  });
+
+  ipcRenderer.on('exit', function (event, text) {
+    setServer("");
   });
 
   const restartApp = () => {
@@ -106,7 +114,16 @@ const Notify = () => {
             <>
               {downloadstatus ? downloadstatus : "Actualizacion Disponible"}
               <Box style={{ marginTop: "10px" }} />
-              <LinearProgress variant="determinate" value={downloadpercentage} />
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ width: '100%', mr: 1 }}>
+                  <LinearProgress variant="determinate" value={downloadpercentage} />
+                </Box>
+                <Box sx={{ minWidth: 35 }}>
+                  <Typography variant="body2" color="text.secondary">{`${Math.round(
+                    downloadpercentage
+                  )}%`}</Typography>
+                </Box>
+              </Box>
               <Box style={{
                 display: "flex",
                 marginTop: 10,

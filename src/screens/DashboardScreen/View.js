@@ -56,14 +56,6 @@ const ViewRegister = (props) => {
                 name="clavesiipersona"
                 type="password"
             />
-            {user?.rutpersona ?
-                null
-                :
-                <FormControlLabel
-                    control={<Checkbox value="remember" color="primary" />}
-                    label="Acepto las politicas de privacidad"
-                />
-            }
             <Button
                 onClick={handleSubmit}
                 fullWidth
