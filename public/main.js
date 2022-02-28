@@ -15,7 +15,7 @@ const iconPath = path.join(__dirname, "images/favicon-16x16.png");
 const pluginPath = isDev ? path.join(
   __dirname,
   '../statico/nuxo-win.exe'
-) : path.join(__dirname, '../../statico/nuxo-win.exe');
+) : path.join(__dirname, '../../../statico/nuxo-win.exe');
 
 const template = [
   {
@@ -105,7 +105,7 @@ const server = () => {
       cwd: isDev ? path.join(
         __dirname,
         '../statico'
-      ) : path.join(__dirname, '../../statico'),
+      ) : path.join(__dirname, '../../../statico'),
       windowsHide: true,
     }, (err, data) => {
       if (err) {
@@ -127,6 +127,11 @@ const descomprimir = async () => {
   if (!fs.existsSync('descargas')) {
     fs.mkdirSync('descargas');
   }
+  const pathStatico = isDev ? path.join(
+    __dirname,
+    '../statico'
+  ) : path.join(__dirname, '../../../statico');
+
   const actual = await axios.get(`http://localhost:9000/api`)
     .then((response) => {
       // handle success
@@ -147,24 +152,24 @@ const descomprimir = async () => {
       fs.mkdirSync('temp');
     }
     //respaldar db
-    fs.copyFile('statico/db/data/database.sqlite', 'temp/database.sqlite', (err) => {
+    fs.copyFile(`${pathStatico}/db/data/database.sqlite`, 'temp/database.sqlite', (err) => {
       if (err) throw err;
       console.log('source.txt was copied to destination.txt');
     });
     //borrar archivos
     // setDecompresstatus('borrando archivos actuales')
     win.webContents.send('decompress', 'borrando archivos actuales');
-
-    await rimraf("statico", function () { win.webContents.send('decompress', 'archivos borrados'); });
+    
+    await rimraf(pathStatico, function () { win.webContents.send('decompress', 'archivos borrados'); });
     //crear directorio
-    if (!fs.existsSync('statico')) {
-      fs.mkdirSync('statico');
+    if (!fs.existsSync(pathStatico)) {
+      fs.mkdirSync(pathStatico);
     }
-    if (!fs.existsSync('statico/db')) {
-      fs.mkdirSync('statico/db');
+    if (!fs.existsSync(`${pathStatico}/db`)) {
+      fs.mkdirSync(`${pathStatico}/db`);
     }
-    if (!fs.existsSync('statico/db/data')) {
-      fs.mkdirSync('statico/db/data');
+    if (!fs.existsSync(`${pathStatico}/db/data`)) {
+      fs.mkdirSync(`${pathStatico}/db/data`);
     }
 
   }
@@ -176,7 +181,7 @@ const descomprimir = async () => {
     // setDecompresstatus('archivos descomprimidos con exito')
     //pegar base de datos
     if (actual?.version) {
-      fs.copyFile('temp/database.sqlite', 'statico/db/data/database.sqlite', (err) => {
+      fs.copyFile('temp/database.sqlite', `${pathStatico}/db/data/database.sqlite`, (err) => {
         if (err) throw err;
         console.log('source.txt was copied to destination.txt');
       });
@@ -206,8 +211,8 @@ ipcMain.on('decompressUpdate', (event, arg) => {
 
 function createWindow() {
   // Create the browser window.
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  // const menu = Menu.buildFromTemplate(template);
+  // Menu.setApplicationMenu(menu);
   win = new BrowserWindow({
     width: 470,
     height: 600,
@@ -248,7 +253,6 @@ const tray = () => {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Cerrar Aplicación', click: () => {
-        win.webContents.send('exit', 'cerrando aplicacion');
         win.hide();
         win = null
         app.quit();

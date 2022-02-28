@@ -6,10 +6,6 @@ const getUser = () => {
     const { isLoading, data, error } = useQuery(
         "/users",
         () => request.user.getUsers()
-        // ,
-        // {
-        //     refetchInterval: 30000,
-        // }
     );
     return {
         isLoading,

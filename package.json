@@ -57,10 +57,6 @@
   "build": {
     "appId": "com.github.CC25MC.nuxofrontupdate",
     "productName": "Nuxo",
-    "extraResources": "statico",
-    "directories": {
-      "buildResources": "resources"
-    },
     "files": [
       "dist/**/*",
       "public/**/*"
