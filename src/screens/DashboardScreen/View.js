@@ -14,10 +14,11 @@ import logo from '../../images/android-chrome-512x512.png';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOf';
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import InputAdornment from '@mui/material/InputAdornment';
-
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 const ViewRegister = (props) => {
     const {
         handleChange,
@@ -48,30 +49,35 @@ const ViewRegister = (props) => {
                 :
                 rutpersona && <Alert severity="error">Este rut no es válido</Alert>
             }
-            <TextField
-                margin="normal"
-                onChange={handleChange("clavesiipersona")}
-                value={clavesiipersona}
-                required
-                fullWidth
-                id="clavesiipersona"
-                label="Clave sii persona"
-                name="clavesiipersona"
-                type={pass ? 'text' : 'password'}
-                endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => {
-                            setPass(!pass) 
-                        }}
-                        edge="end"
-                      >
-                        {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-            />
+            <FormControl sx={{ width: '100%' }} required variant="outlined">
+                <InputLabel htmlFor="clavesiipersona" required>Clave sii persona</InputLabel>
+                <OutlinedInput
+                    onChange={handleChange('weight')}
+                    margin="normal"
+                    onChange={handleChange("clavesiipersona")}
+                    value={clavesiipersona}
+                    required
+                    fullWidth
+                    id="clavesiipersona"
+                    label="Clave sii persona"
+                    name="clavesiipersona"
+                    type={pass ? 'text' : 'password'}
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() => {
+                                    setPass(!pass);
+                                }}
+                                edge="end"
+                            >
+                                {pass ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+
+                        </InputAdornment>
+                    }
+                />
+            </FormControl>
             <Button
                 onClick={handleSubmit}
                 fullWidth
@@ -227,6 +233,8 @@ const ViewEmpresa = (props) => {
         rutempresa,
         clavesiiempresa,
         setScene } = props;
+    const [pass1, setPass1] = useState(false);
+    const [pass, setPass] = useState(false);
     return (
 
         <Box sx={{ mt: 1 }}>
@@ -245,27 +253,62 @@ const ViewEmpresa = (props) => {
                 :
                 rutempresa && <Alert severity="error">Este rut no es válido</Alert>
             }
-            <TextField
-                margin="normal"
-                fullWidth
-                onChange={handleChange("clavesiiempresa")}
-                value={clavesiiempresa}
-                name="clavesiiempresa"
-                label="Clave sii empresa"
-                type="password"
-                id="clavesiiempresa"
-            />
-
-            <TextField
-                margin="normal"
-                onChange={handleChange("clavecertificado")}
-                value={clavecertificado}
-                fullWidth
-                type="password"
-                id="clavecertificado"
-                label="Clave Certificado"
-                name="clavecertificado"
-            />
+             <Box sx={{ marginBottom: "20px" }} />
+            <FormControl sx={{ width: '100%' }} required variant="outlined">
+                <InputLabel htmlFor="clavesiiempresa" required>Clave sii empresa</InputLabel>
+                <OutlinedInput
+                    margin="normal"
+                    onChange={handleChange("clavesiiempresa")}
+                    value={clavesiiempresa}
+                    required
+                    fullWidth
+                    name="clavesiiempresa"
+                    label="Clave sii empresa"
+                    id="clavesiiempresa"
+                    type={pass ? 'text' : 'password'}
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() => {
+                                    setPass(!pass);
+                                }}
+                                edge="end"
+                            >
+                                {pass ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                        </InputAdornment>
+                    }
+                />
+            </FormControl>
+            <Box sx={{ marginBottom: "20px" }} />
+            <FormControl sx={{ width: '100%' }} required variant="outlined">
+                <InputLabel htmlFor="clavecertificado" required>Clave Certificado</InputLabel>
+                <OutlinedInput
+                   margin="normal"
+                   onChange={handleChange("clavecertificado")}
+                   value={clavecertificado}
+                   fullWidth
+                   type="password"
+                   id="clavecertificado"
+                   label="Clave Certificado"
+                   name="clavecertificado"
+                    type={pass1 ? 'text' : 'password'}
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() => {
+                                    setPass1(!pass1);
+                                }}
+                                edge="end"
+                            >
+                                {pass1 ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                        </InputAdornment>
+                    }
+                />
+            </FormControl>
 
             <Button
                 onClick={handleSubmit}
@@ -341,7 +384,7 @@ const DashboardView = (props) => {
                 justifyContent: "center",
                 alignItems: "center"
             }} >
-            <Typography variant="h5" color="white" gutterBottom component="div">
+                <Typography variant="h5" color="white" gutterBottom component="div">
                     Guardando Datos
                 </Typography>
                 <CircularProgress size={100} />

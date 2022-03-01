@@ -5,6 +5,11 @@ export const post = async (payload) => {
 	return res.data;
 };
 
+export const put = async (payload) => {
+	const res = await request.put("/api/licencia", payload);
+	return res.data;
+};
+
 export const deleteLicence = async () => {
     const res = await request.delete("/api/licencia");
     return res.data;

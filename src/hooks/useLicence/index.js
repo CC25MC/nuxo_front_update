@@ -16,13 +16,14 @@ const getLicence = () => {
 
 
 const SaveLicence = () => {
+    const { licenceGet } = getLicence();
     const {
         mutate: mutateLicence,
         isLoading,
         error: errorLicence,
         data
     } = useMutation(
-        (payload) => request.licence.post(payload)
+        (payload) => licenceGet?.id ? request.licence.put(payload) : request.licence.post(payload) 
     );
 
     return {
