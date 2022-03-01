@@ -135,37 +135,43 @@ const descomprimir = async () => {
   const actual = await axios.get(`http://localhost:9000/api`)
     .then((response) => {
       // handle success
+      
       return response?.data;
     })
     .catch((error) => {
+      
       console.log(error);
     });
 
   if (actual?.version) {
+    
     //apagar servidor
-    var request = await http.get("http://localhost:9000/api/server/close", function (response) {
-      // setDecompresstatus('apagando el servidor')
-      win.webContents.send('decompress', "apagando el servidor");
-    });
+    http.get("http://localhost:9000/api/server/close");
+    
     //crear carpeta temp
     if (!fs.existsSync('temp')) {
       fs.mkdirSync('temp');
+      
     }
     //respaldar db
-    fs.copyFile(`${pathStatico}/db/data/database.sqlite`, 'temp/database.sqlite', (err) => {
+    fs.copyFileSync(`${pathStatico}/db/data/database.sqlite`, 'temp/database.sqlite', (err) => {
       if (err) throw err;
-      console.log('source.txt was copied to destination.txt');
+      
     });
+    
     //borrar archivos
     // setDecompresstatus('borrando archivos actuales')
     win.webContents.send('decompress', 'borrando archivos actuales');
+
     
-    await rimraf(pathStatico, function () { win.webContents.send('decompress', 'archivos borrados'); });
+    
+    rimraf(pathStatico, function () { win.webContents.send('decompress', 'archivos borrados'); });
+    
     //crear directorio
     if (!fs.existsSync(pathStatico)) {
       fs.mkdirSync(pathStatico);
     }
-    if (!fs.existsSync(`${pathStatico}/db`)) {
+    if (!fs.existsSync(`${pathStatico}/db`)) {s
       fs.mkdirSync(`${pathStatico}/db`);
     }
     if (!fs.existsSync(`${pathStatico}/db/data`)) {
@@ -175,22 +181,26 @@ const descomprimir = async () => {
   }
 
   //descomprimir
+  
   await win.webContents.send('decompress', 'descomprimiento archivos');
-  const files = decompress('descargas/file.zip', 'statico').then(files => {
+  const files = await decompress('descargas/file.zip', 'statico').then(files => {
     win.webContents.send('decompress', 'archivos descomprimidos con exito');
     // setDecompresstatus('archivos descomprimidos con exito')
     //pegar base de datos
     if (actual?.version) {
-      fs.copyFile('temp/database.sqlite', `${pathStatico}/db/data/database.sqlite`, (err) => {
+      fs.copyFileSync('temp/database.sqlite', `${pathStatico}/db/data/database.sqlite`, (err) => {
         if (err) throw err;
-        console.log('source.txt was copied to destination.txt');
+        
+        //console.log('source.txt was copied to destination.txt');
       });
     }
     rimraf("temp", function () {
       win.webContents.send('decompress', 'archivos borrados');
     });
     //iniciar servidor
+    
     server()
+    
     win.webContents.send('decompress', 'reiniciando servidor');
     // setDecompresstatus('reiniciando servidor')
   });
