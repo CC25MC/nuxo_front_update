@@ -171,7 +171,7 @@ const descomprimir = async () => {
     if (!fs.existsSync(pathStatico)) {
       fs.mkdirSync(pathStatico);
     }
-    if (!fs.existsSync(`${pathStatico}/db`)) {s
+    if (!fs.existsSync(`${pathStatico}/db`)) {
       fs.mkdirSync(`${pathStatico}/db`);
     }
     if (!fs.existsSync(`${pathStatico}/db/data`)) {
