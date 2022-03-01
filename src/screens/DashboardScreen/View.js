@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -6,8 +7,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Alert from '@mui/material/Alert';
 import Link from '@mui/material/Link';
 import { validate } from 'rut.js';
@@ -69,6 +68,7 @@ const ViewRegister = (props) => {
                 <Button
                     onClick={() => setScene(4)}
                     fullWidth
+                    disabled={!loading ? false : true}
                     variant="outlined"
                     sx={{ mt: 1, mb: 2 }}
                 >
@@ -114,6 +114,7 @@ const ViewLicencia = (props) => {
             <Button
                 onClick={() => setScene(4)}
                 fullWidth
+                disabled={!loadingLicence ? false : true}
                 variant="outlined"
                 sx={{ mt: 1, mb: 2 }}
             >
@@ -187,6 +188,7 @@ const ViewProfile = (props) => {
             <Button
                 onClick={() => setScene(4)}
                 fullWidth
+                disabled={!loading ? false : true}
                 variant="outlined"
                 sx={{ mt: 1, mb: 2 }}
             >
@@ -260,6 +262,7 @@ const ViewEmpresa = (props) => {
             <Button
                 onClick={() => setScene(4)}
                 fullWidth
+                disabled={!loading ? false : true}
                 variant="outlined"
                 sx={{ mt: 1, mb: 2 }}
             >
@@ -280,7 +283,7 @@ const DashboardView = (props) => {
         setAnchorEl(null);
         props.setScene(scene);
     };
-
+    const { loadingLicence, loading } = props
     const sceneActions = [
         {
             title: "Registro",
@@ -309,6 +312,23 @@ const DashboardView = (props) => {
     ]
     return (
         <>
+            {loadingLicence || loading && (<Box style={{
+                position: "fixed",
+                top: "0px",
+                width: "100%",
+                height: "100vh",
+                opacity: "70%",
+                backgroundColor: "black",
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: "center",
+                alignItems: "center"
+            }} >
+            <Typography variant="h5" color="white" gutterBottom component="div">
+                    Guardando Datos
+                </Typography>
+                <CircularProgress size={100} />
+            </Box>)}
             <Box sx={{
                 display: 'flex',
                 flexDirection: props?.scene === 4 ? "flex" : "column",
