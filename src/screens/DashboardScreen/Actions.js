@@ -22,16 +22,15 @@ export const Actions = () => {
     const [values, setValues] = useState(dataValues);
     const [scene, setScene] = useState(0);
     const [licencia, setlicencia] = useState("");
-    const { mutateLicence, data: licence, errorLicence, licenStatus } = SaveLicence()
+    const { mutateLicence, isLoading: loadingLicence, errorLicence, licenStatus } = SaveLicence()
     const { licenceGet, licenceStatus } = getLicence();
-    // console.log(licence);
 
     useEffect(() => {
         if (userStatus) {
             setValues(user);
             setScene(4)
         }
-    }, [user, licence]);
+    }, [user]);
 
     useEffect(() => {
         if (licenceStatus) {
@@ -57,15 +56,19 @@ export const Actions = () => {
     }, [errorLicence]);
 
     useEffect(() => {
+        if (licenStatus) {
+            enqueueSnackbar('Licencia registrada con exito', { variant: 'success' });
+            setScene(4);
+        }
+    }, [licenStatus]);
+
+    useEffect(() => {
         if (status) {
             enqueueSnackbar('Datos registrados con exito', { variant: 'success' });
             setScene(user?.rutpersona ? 4 : 1);
         }
-        if (!licenStatus && user?.rutpersona) {
-            enqueueSnackbar('Licencia registrada con exito', { variant: 'success' });
-            setScene(4);
-        }
-    }, [status, licenStatus]);
+    }, [status]);
+
     const {
         nombre,
         apellido,
@@ -102,6 +105,7 @@ export const Actions = () => {
         saveLicenc,
         licencia,
         loading: isLoading,
+        loadingLicence,
         nombre,
         apellido,
         correo,

@@ -86,6 +86,7 @@ const ViewRegister = (props) => {
 const ViewLicencia = (props) => {
     const { licencia, handleChangelicencia, saveLicenc,
         user,
+        loadingLicence,
         setScene } = props
     return (
         <Box sx={{ mt: 1 }}>
@@ -104,7 +105,7 @@ const ViewLicencia = (props) => {
             <Button
                 onClick={saveLicenc}
                 fullWidth
-                disabled={licencia ? false : true}
+                disabled={licencia && !loadingLicence ? false : true}
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
             >
@@ -250,7 +251,7 @@ const ViewEmpresa = (props) => {
             <Button
                 onClick={handleSubmit}
                 fullWidth
-                disabled={validate(rutpersona) && clavesiipersona && !loading ? false : true}
+                disabled={validate(rutempresa) && clavesiiempresa && !loading ? false : true}
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
             >

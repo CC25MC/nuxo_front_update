@@ -30,7 +30,7 @@ const SaveLicence = () => {
         errorLicence,
         mutateLicence,
         data,
-        licenStatus: data?.vencida ? data?.vencida : false
+        licenStatus: data ? true : false
     };
 };
 
