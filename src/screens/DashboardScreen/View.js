@@ -14,6 +14,9 @@ import logo from '../../images/android-chrome-512x512.png';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOf';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const ViewRegister = (props) => {
     const {
@@ -24,6 +27,7 @@ const ViewRegister = (props) => {
         clavesiipersona,
         user,
         setScene } = props;
+    const [pass, setPass] = useState(false);
     return (
 
         <Box sx={{ mt: 1 }}>
@@ -53,7 +57,20 @@ const ViewRegister = (props) => {
                 id="clavesiipersona"
                 label="Clave sii persona"
                 name="clavesiipersona"
-                type="password"
+                type={pass ? 'text' : 'password'}
+                endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => {
+                            setPass(!pass) 
+                        }}
+                        edge="end"
+                      >
+                        {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
             />
             <Button
                 onClick={handleSubmit}
