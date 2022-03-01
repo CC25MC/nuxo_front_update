@@ -135,38 +135,38 @@ const descomprimir = async () => {
   const actual = await axios.get(`http://localhost:9000/api`)
     .then((response) => {
       // handle success
-      
+      console.log("servidor activo")
       return response?.data;
     })
     .catch((error) => {
-      
+      console.log("error al ver servidor")
       console.log(error);
     });
 
   if (actual?.version) {
-    
+    console.log("ingreso a la condicional de que exista version")
     //apagar servidor
     http.get("http://localhost:9000/api/server/close");
-    
+    console.log("se apago servidor")
     //crear carpeta temp
     if (!fs.existsSync('temp')) {
       fs.mkdirSync('temp');
-      
+      console.log("carpeta temporal creada")
     }
     //respaldar db
     fs.copyFileSync(`${pathStatico}/db/data/database.sqlite`, 'temp/database.sqlite', (err) => {
       if (err) throw err;
-      
+      console.log("copiando base de datos")
     });
-    
+    console.log("base de datos copiada")
     //borrar archivos
     // setDecompresstatus('borrando archivos actuales')
     win.webContents.send('decompress', 'borrando archivos actuales');
 
-    
+    console.log(pathStatico)
     
     rimraf(pathStatico, function () { win.webContents.send('decompress', 'archivos borrados'); });
-    
+    console.log("archivos borrados")
     //crear directorio
     if (!fs.existsSync(pathStatico)) {
       fs.mkdirSync(pathStatico);
@@ -181,7 +181,7 @@ const descomprimir = async () => {
   }
 
   //descomprimir
-  
+  console.log("empezando a descomprimir")
   await win.webContents.send('decompress', 'descomprimiento archivos');
   const files = await decompress('descargas/file.zip', 'statico').then(files => {
     win.webContents.send('decompress', 'archivos descomprimidos con exito');
@@ -190,7 +190,7 @@ const descomprimir = async () => {
     if (actual?.version) {
       fs.copyFileSync('temp/database.sqlite', `${pathStatico}/db/data/database.sqlite`, (err) => {
         if (err) throw err;
-        
+        console.log("compiando respaldo de db")
         //console.log('source.txt was copied to destination.txt');
       });
     }
@@ -198,9 +198,9 @@ const descomprimir = async () => {
       win.webContents.send('decompress', 'archivos borrados');
     });
     //iniciar servidor
-    
+    console.log("iniciando servidor")
     server()
-    
+    console.log("servidor iniciado")
     win.webContents.send('decompress', 'reiniciando servidor');
     // setDecompresstatus('reiniciando servidor')
   });
