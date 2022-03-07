@@ -52,7 +52,6 @@ const ViewRegister = (props) => {
             <FormControl sx={{ width: '100%' }} required variant="outlined">
                 <InputLabel htmlFor="clavesiipersona" required>Clave sii persona</InputLabel>
                 <OutlinedInput
-                    onChange={handleChange('weight')}
                     margin="normal"
                     onChange={handleChange("clavesiipersona")}
                     value={clavesiipersona}
@@ -253,7 +252,7 @@ const ViewEmpresa = (props) => {
                 :
                 rutempresa && <Alert severity="error">Este rut no es válido</Alert>
             }
-             <Box sx={{ marginBottom: "20px" }} />
+            <Box sx={{ marginBottom: "20px" }} />
             <FormControl sx={{ width: '100%' }} required variant="outlined">
                 <InputLabel htmlFor="clavesiiempresa" required>Clave sii empresa</InputLabel>
                 <OutlinedInput
@@ -285,14 +284,13 @@ const ViewEmpresa = (props) => {
             <FormControl sx={{ width: '100%' }} required variant="outlined">
                 <InputLabel htmlFor="clavecertificado" required>Clave Certificado</InputLabel>
                 <OutlinedInput
-                   margin="normal"
-                   onChange={handleChange("clavecertificado")}
-                   value={clavecertificado}
-                   fullWidth
-                   type="password"
-                   id="clavecertificado"
-                   label="Clave Certificado"
-                   name="clavecertificado"
+                    margin="normal"
+                    onChange={handleChange("clavecertificado")}
+                    value={clavecertificado}
+                    fullWidth
+                    id="clavecertificado"
+                    label="Clave Certificado"
+                    name="clavecertificado"
                     type={pass1 ? 'text' : 'password'}
                     endAdornment={
                         <InputAdornment position="end">
